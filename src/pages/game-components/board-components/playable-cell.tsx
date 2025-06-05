@@ -11,14 +11,14 @@ type CellProps = {
   onClick: (type: CellState) => void;
 };
 
-const CorrectCell = () => <div className="border flex items-center justify-center bg-green-500" />;
+const CorrectCell = () => <div className="min-w-6 min-h-6 border flex items-center justify-center bg-green-500" />;
 
 export const FilledCell = ({ onClick }: CellProps) => (
-  <div className="border flex items-center justify-center bg-black" onClick={() => onClick("empty")} />
+  <div className="min-w-6 min-h-6 border flex items-center justify-center bg-black" onClick={() => onClick("empty")} />
 );
 
 export const CrossedCell = ({ onClick }: CellProps) => (
-  <div className="border flex items-center justify-center bg-gray-300" onClick={() => onClick("empty")}>
+  <div className="min-w-6 min-h-6 border flex items-center justify-center bg-gray-300" onClick={() => onClick("empty")}>
     <X className="w-4 h-4 text-gray-600" />
   </div>
 );
@@ -73,7 +73,7 @@ export const EmptyCell = ({ onClick }: CellProps) => {
 
   return (
     <div
-      className="border flex items-center justify-center bg-white"
+      className="min-w-6 min-h-6 border flex items-center justify-center"
       onClick={handleClick}
       onDoubleClick={handleDoubleClick}
       onTouchEnd={onTouchEnd}

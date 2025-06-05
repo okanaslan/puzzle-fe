@@ -2,7 +2,7 @@ import { useState } from "react";
 import { CellState } from "../../types";
 import { Level } from "../../levels/levels";
 import { PlayableCell } from "./board-components/playable-cell";
-import { HintCell, VoidCell } from "./board-components/hint-cells";
+import { LeftHintCell, TopHintCell, VoidCell } from "./board-components/hint-cells";
 
 type BoardProps = {
   level: Level;
@@ -19,14 +19,20 @@ export const Board = ({ level }: BoardProps) => {
       .map(() => Array(level.size).fill("empty")),
   );
 
-  const toggleCell = (row: number, col: number, type: CellState) => {
-    // 1 means filled, 0 means empty
-    const isCorrect =
-      (type === "filled" && level.boardMap[row][col] === 1) ||
-      (type === "crossed" && level.boardMap[row][col] === 0) ||
-      (type === "empty" && level.boardMap[row][col] === 0);
+  const [isFinished, setIsFinished] = useState(false);
 
-    console.log(`Cell at (${row}, ${col}) marked as "${type}". Correct: ${isCorrect ? "Yes" : "No"}`);
+  function isGameFinished(board: CellState[][], boardMap: number[][]): boolean {
+    for (let row = 0; row < board.length; row++) {
+      for (let col = 0; col < board[row].length; col++) {
+        if (boardMap[row][col] === 1 && board[row][col] !== "filled") return false;
+        if (boardMap[row][col] === 0 && board[row][col] === "filled") return false;
+      }
+    }
+    return true;
+  }
+
+  const toggleCell = (row: number, col: number, type: CellState) => {
+    if (isFinished) return; // Prevent interaction if finished
 
     const newBoard = board.map((boardRow, rowIndex) =>
       boardRow.map((cellState, colIndex) => {
@@ -36,18 +42,25 @@ export const Board = ({ level }: BoardProps) => {
         return cellState;
       }),
     );
-    setBoard(newBoard);
+
+    if (isGameFinished(newBoard, level.boardMap)) {
+      setIsFinished(true);
+      setBoard(newBoard.map((rowArr, i) => rowArr.map((cell, j) => (level.boardMap[i][j] === 1 ? "correct" : cell))));
+    } else {
+      setBoard(newBoard);
+    }
   };
 
   return (
     <div
-      className="gap-[0.5px] w-full h-full"
       style={{
         display: "grid",
-        gridTemplateColumns: `repeat(${totalCols}, minmax(0, 1fr))`,
-        aspectRatio: "1 / 1", // Ensures width and height are equal
+        gridTemplateColumns: `${Array(hintSize).fill("auto").join(" ")} ${Array(level.size).fill("1fr").join(" ")}`,
+        gridTemplateRows: `${Array(hintSize).fill("auto").join(" ")} ${Array(level.size).fill("1fr").join(" ")}`,
+        aspectRatio: "1 / 1",
         width: "100%",
       }}
+      className="w-full h-full bg-gray-400"
     >
       {Array.from({ length: totalRows }).map((_, rowIdx) =>
         Array.from({ length: totalCols }).map((_, colIdx) => {
@@ -58,16 +71,14 @@ export const Board = ({ level }: BoardProps) => {
           // Top hints
           if (rowIdx < hintSize && colIdx >= hintSize) {
             const hints = level.topHints[colIdx - hintSize] ?? [];
-            // Show the correct hint for this row in the stack (from bottom up)
             const hintValue = hints.length >= hintSize - rowIdx ? hints[hints.length - (hintSize - rowIdx)] : null;
-            return <HintCell key={`top-${rowIdx}-${colIdx}`} value={hintValue} />;
+            return <TopHintCell key={`top-${rowIdx}-${colIdx}`} value={hintValue} />;
           }
           // Left hints
           if (rowIdx >= hintSize && colIdx < hintSize) {
             const hints = level.leftHints[rowIdx - hintSize] ?? [];
-            // Show the correct hint for this column in the stack (from right to left)
             const hintValue = hints.length >= hintSize - colIdx ? hints[hints.length - (hintSize - colIdx)] : null;
-            return <HintCell key={`left-${rowIdx}-${colIdx}`} value={hintValue} />;
+            return <LeftHintCell key={`left-${rowIdx}-${colIdx}`} value={hintValue} />;
           }
           // Board cell
           if (rowIdx >= hintSize && colIdx >= hintSize) {
