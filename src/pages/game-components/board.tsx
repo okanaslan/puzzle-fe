@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CellState } from "../../types";
 import { Level } from "../../levels/levels";
 import { PlayableCell } from "./board-components/playable-cell";
@@ -18,6 +18,15 @@ export const Board = ({ level }: BoardProps) => {
       .fill(null)
       .map(() => Array(level.size).fill("empty")),
   );
+
+  useEffect(() => {
+    // Initialize the board with the correct size and empty cells
+    setBoard(
+      Array(level.size)
+        .fill(null)
+        .map(() => Array(level.size).fill("empty")),
+    );
+  }, [level.size]);
 
   const [isFinished, setIsFinished] = useState(false);
 
@@ -50,6 +59,11 @@ export const Board = ({ level }: BoardProps) => {
       setBoard(newBoard);
     }
   };
+
+  if (board.length !== level.size || board[0].length !== level.size) {
+    console.error("Board size does not match level size");
+    return null;
+  }
 
   return (
     <div

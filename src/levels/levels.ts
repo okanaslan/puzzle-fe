@@ -6,7 +6,6 @@ export type Level = {
   boardMap: (0 | 1)[][];
   topHints: number[][];
   leftHints: number[][];
-  cellSize: number;
   maxHintSize: number;
 };
 
@@ -96,24 +95,6 @@ const createLevelFromMap = (boardMap: (0 | 1)[][]): Level => {
 
   const maxHintSize = Math.max(...topHints.map((hints) => hints.length), ...leftHints.map((hints) => hints.length));
 
-  let cellSize: number;
-  switch (size) {
-    case 5:
-      cellSize = 10;
-      break;
-    case 10:
-      cellSize = 8;
-      break;
-    case 15:
-      cellSize = 6;
-      break;
-    case 20:
-      cellSize = 5;
-      break;
-    default:
-      cellSize = 20;
-  }
-
   const difficulty = Object.keys(difficultyLevels).find(
     (key) => difficultyLevels[key as Difficultty] === size,
   ) as Difficultty;
@@ -123,7 +104,6 @@ const createLevelFromMap = (boardMap: (0 | 1)[][]): Level => {
     leftHints,
     difficulty,
     maxHintSize,
-    cellSize,
     size,
   };
 };
