@@ -41,13 +41,13 @@ export const Board = ({ level }: BoardProps) => {
 
   return (
     <div
+      className="gap-[0.5px] w-full h-full"
       style={{
         display: "grid",
         gridTemplateColumns: `repeat(${totalCols}, minmax(0, 1fr))`,
         aspectRatio: "1 / 1", // Ensures width and height are equal
         width: "100%",
       }}
-      className="gap-1 w-full h-full p-2"
     >
       {Array.from({ length: totalRows }).map((_, rowIdx) =>
         Array.from({ length: totalCols }).map((_, colIdx) => {

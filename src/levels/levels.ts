@@ -1,7 +1,4 @@
 import { BoardMap, Difficultty } from "../types";
-import { easyLevels } from "./easy/easy";
-import { hardLevels } from "./hard/hard";
-import { mediumLevels } from "./medium/medium";
 
 export type Level = {
   boardMap: (0 | 1)[][];
@@ -10,12 +7,6 @@ export type Level = {
   size: number;
   cellSize: number;
   maxHintSize: number;
-};
-
-export const levels: Record<Difficultty, Array<BoardMap>> = {
-  easy: easyLevels,
-  medium: mediumLevels,
-  hard: hardLevels,
 };
 
 export const createLevelFromMap = (boardMap: (0 | 1)[][]): Level => {
@@ -80,8 +71,7 @@ export const createLevelFromMap = (boardMap: (0 | 1)[][]): Level => {
       cellSize = 20;
   }
 
-  console.log("Top hints:", topHints);
-  console.log("Left hints:", leftHints);
+  console.log("board:", topHints);
 
   return {
     boardMap,
@@ -93,4 +83,29 @@ export const createLevelFromMap = (boardMap: (0 | 1)[][]): Level => {
   };
 };
 
-export const initialLevel = createLevelFromMap(levels.easy[0]);
+export const randomBoardGenerator = (Difficultty: Difficultty, seed: number): BoardMap => {
+  const size = Difficultty === "easy" ? 5 : Difficultty === "medium" ? 8 : 10;
+  // Simple seeded random number generator (Linear Congruential Generator)
+  let s = seed;
+  function seededRandom() {
+    s = (s * 9301 + 49297) % 233280;
+    return s / 233280;
+  }
+
+  const maxFilledCells = Math.floor((size * size * 2) / 3); // Fill up to 67% of the cells
+  let filledCells = 0;
+
+  const boardMap: BoardMap = Array.from({ length: size }, () => Array(size).fill(0));
+  while (filledCells < maxFilledCells) {
+    const row = Math.floor(seededRandom() * size);
+    const col = Math.floor(seededRandom() * size);
+    if (boardMap[row][col] === 0) {
+      boardMap[row][col] = 1; // Place a single filled cell randomly
+      filledCells++;
+    }
+  }
+
+  return boardMap;
+};
+
+export const initialLevel = createLevelFromMap(randomBoardGenerator("easy", 0));
