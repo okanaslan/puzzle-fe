@@ -16,7 +16,8 @@ export const difficultyCalculator = (level: Level): number => {
   // Helper: score a hint array (more segments and smaller segments = harder)
   const scoreHints = (hints: number[][]) => {
     return hints.reduce((sum, hintArr) => {
-      if (!hintArr.length || (hintArr.length === 1 && hintArr[0] === 0)) return sum;
+      const isEmpty = hintArr.length === 0 || (hintArr.length === 1 && hintArr[0] === 0);
+      if (isEmpty) return sum;
 
       const filledCellCount = hintArr.reduce((a, b) => a + b, 0);
       const hintCount = hintArr.length;

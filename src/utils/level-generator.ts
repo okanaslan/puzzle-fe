@@ -13,8 +13,12 @@ export class LevelGenerator {
       ...level.topHints.map((hints) => hints.length),
       ...level.leftHints.map((hints) => hints.length),
     );
+    let minHintSize = Math.min(
+      ...level.topHints.map((hints) => hints.length),
+      ...level.leftHints.map((hints) => hints.length),
+    );
 
-    while (maxHintSize > size / 5 + 1) {
+    while (maxHintSize > size / 5 + 1 || minHintSize === 0) {
       console.log(`Increasing complexity: current max hint size is ${maxHintSize}, generating more complex level...`);
 
       const rotatedMap = this.rotateBoardMap(boardMap);
@@ -22,6 +26,10 @@ export class LevelGenerator {
 
       level = createLevelFromMap(boardMap);
       maxHintSize = Math.max(
+        ...level.topHints.map((hints) => hints.length),
+        ...level.leftHints.map((hints) => hints.length),
+      );
+      minHintSize = Math.min(
         ...level.topHints.map((hints) => hints.length),
         ...level.leftHints.map((hints) => hints.length),
       );

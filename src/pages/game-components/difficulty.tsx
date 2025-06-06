@@ -28,7 +28,7 @@ export function DifficultyText({ score, handleRandomLevel }: { score: number; ha
   }
 
   return (
-    <div className="flex flex-col items-center mb-4 w-full">
+    <div className="relative flex flex-col items-center mb-4 w-full">
       <div className={`flex gap-2 mb-4 items-center font-bold text-lg ${color}`}>
         <span>{emoji}</span>
         <span>{`${text}`}</span>
