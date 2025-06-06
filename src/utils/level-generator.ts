@@ -1,30 +1,36 @@
-import { BoardMap, Difficultty } from "../types";
-import { difficultyLevels, Level } from "./level";
+import { BoardMap } from "../types";
+import { Level } from "./level";
 import { createLevelFromMap } from "./map-to-level";
 import { Random } from "./random";
 
 export class LevelGenerator {
-  static generate = (difficulty: Difficultty, seed: number): Level => {
-    if (!difficultyLevels[difficulty]) {
-      throw new Error(`Invalid difficulty level: ${difficulty}`);
-    }
-    let boardMap = this.randomBoardGenerator(difficulty, seed);
-    // Rotate and increase segment sizes 3 times to add complexity
-    for (let i = 0; i < 3; i++) {
-      const rotatedMap = this.rotateBoardMap(boardMap);
-      const increasedMap = this.increaseSegmentSizes(rotatedMap);
-      boardMap = increasedMap;
-    }
+  static generate = (size: number, seed: number): Level => {
+    let boardMap = this.randomBoardGenerator(size, seed);
 
-    const level = createLevelFromMap(boardMap);
+    // Rotate and increase segment sizes 3 times to add complexity
+    let level = createLevelFromMap(boardMap);
+    let maxHintSize = Math.max(
+      ...level.topHints.map((hints) => hints.length),
+      ...level.leftHints.map((hints) => hints.length),
+    );
+
+    while (maxHintSize > size / 5 + 1) {
+      console.log(`Increasing complexity: current max hint size is ${maxHintSize}, generating more complex level...`);
+
+      const rotatedMap = this.rotateBoardMap(boardMap);
+      boardMap = this.increaseSegmentSizes(rotatedMap);
+
+      level = createLevelFromMap(boardMap);
+      maxHintSize = Math.max(
+        ...level.topHints.map((hints) => hints.length),
+        ...level.leftHints.map((hints) => hints.length),
+      );
+    }
 
     return level;
   };
 
-  private static randomBoardGenerator = (difficulty: Difficultty, seed: number): BoardMap => {
-    const size = difficultyLevels[difficulty];
-    // Simple seeded random number generator (Linear Congruential Generator)
-
+  private static randomBoardGenerator = (size: number, seed: number): BoardMap => {
     const boardMap: BoardMap = Array.from({ length: size }, () => Array(size).fill(0));
     for (let row = 0; row < size; row++) {
       const randomRow = this.createRandomFilledRow(size, seed + row);
@@ -77,17 +83,6 @@ export class LevelGenerator {
     return rotatedMap;
   };
 
-  private static increaseSegmentSizes = (boardMap: BoardMap): BoardMap => {
-    const size = boardMap.length;
-    const newBoardMap: BoardMap = Array.from({ length: size }, () => Array(size).fill(0));
-
-    for (let row = 0; row < size; row++) {
-      newBoardMap[row] = this.increaseSegmentSizesInRow(boardMap[row], size);
-    }
-
-    return newBoardMap;
-  };
-
   private static increaseSegmentSizesInRow = (row: (0 | 1)[], size: number): (0 | 1)[] => {
     const updatedRow = [...row];
     let idx = 0;
@@ -111,5 +106,16 @@ export class LevelGenerator {
     }
 
     return updatedRow;
+  };
+
+  private static increaseSegmentSizes = (boardMap: BoardMap): BoardMap => {
+    const size = boardMap.length;
+    const newBoardMap: BoardMap = Array.from({ length: size }, () => Array(size).fill(0));
+
+    for (let row = 0; row < size; row++) {
+      newBoardMap[row] = this.increaseSegmentSizesInRow(boardMap[row], size);
+    }
+
+    return newBoardMap;
   };
 }
