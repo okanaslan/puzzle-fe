@@ -10,9 +10,11 @@ export type Level = {
 };
 
 const difficultyLevels: Record<Difficultty, number> = {
-  easy: 5,
-  medium: 9,
-  hard: 12,
+  beginner: 5,
+  easy: 10,
+  medium: 15,
+  hard: 20,
+  expert: 25,
 };
 
 export const randomLevelGenerator = (difficulty: Difficultty, seed: number): Level => {
