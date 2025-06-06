@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { CellState } from "../../types";
 import { Level } from "../../utils/level";
-import { PlayableCell } from "./board-components/playable-cell";
+import { PlayableCell } from "./board-components/playable-cells";
 import { LeftHintCell, TopHintCell, VoidCell } from "./board-components/hint-cells";
 
 type BoardProps = {
@@ -105,7 +105,7 @@ export const Board = ({ level, isFinished, setIsFinished }: BoardProps) => {
               <PlayableCell
                 key={`${rowIdx}-${colIdx}`}
                 state={board[boardRow][boardCol]}
-                onClick={(type) => toggleCell(boardRow, boardCol, type)}
+                fill={(type) => toggleCell(boardRow, boardCol, type)}
               />
             );
           }
