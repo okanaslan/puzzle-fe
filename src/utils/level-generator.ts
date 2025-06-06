@@ -4,8 +4,10 @@ import { createLevelFromMap } from "./map-to-level";
 import { Random } from "./random";
 
 export class LevelGenerator {
-  static generate = (size: number, seed: number): Level => {
-    let boardMap = this.randomBoardGenerator(size, seed);
+  static readonly DEFAULT_MAX_RETRIES = 5;
+
+  static generate = (size: number, difficulty?: number): Level => {
+    let boardMap = this.randomBoardGenerator(size);
 
     // Rotate and increase segment sizes 3 times to add complexity
     let level = createLevelFromMap(boardMap);
@@ -18,13 +20,12 @@ export class LevelGenerator {
       ...level.leftHints.map((hints) => hints.length),
     );
 
+    let retryCount = 0;
     while (maxHintSize > size / 5 + 1 || minHintSize === 0) {
-      console.log(`Increasing complexity: current max hint size is ${maxHintSize}, generating more complex level...`);
-
       const rotatedMap = this.rotateBoardMap(boardMap);
       boardMap = this.increaseSegmentSizes(rotatedMap);
-
       level = createLevelFromMap(boardMap);
+
       maxHintSize = Math.max(
         ...level.topHints.map((hints) => hints.length),
         ...level.leftHints.map((hints) => hints.length),
@@ -33,27 +34,33 @@ export class LevelGenerator {
         ...level.topHints.map((hints) => hints.length),
         ...level.leftHints.map((hints) => hints.length),
       );
+
+      const maxRetries = this.DEFAULT_MAX_RETRIES ?? difficulty;
+      if (++retryCount >= maxRetries) {
+        console.warn(`Max retries reached (${maxRetries}). Generating a new random board.`);
+        boardMap = this.randomBoardGenerator(size);
+      }
     }
 
     return level;
   };
 
-  private static randomBoardGenerator = (size: number, seed: number): BoardMap => {
+  private static randomBoardGenerator = (size: number): BoardMap => {
     const boardMap: BoardMap = Array.from({ length: size }, () => Array(size).fill(0));
     for (let row = 0; row < size; row++) {
-      const randomRow = this.createRandomFilledRow(size, seed + row);
+      const randomRow = this.createRandomFilledRow(size);
       boardMap[row] = randomRow;
     }
 
     return boardMap;
   };
 
-  private static createRandomFilledRow = (size: number, seed: number) => {
+  private static createRandomFilledRow = (size: number) => {
     let array = Array(size).fill(0);
 
     let currentIndex = 0;
     while (currentIndex < size) {
-      const shouldFill = Random.shouldFillSegment(seed + currentIndex);
+      const shouldFill = Random.shouldFillSegment();
       if (shouldFill) {
         const segmentSize = Random.getRandomSegmentSize(size - currentIndex);
         // Ensure segment size does not exceed remaining space

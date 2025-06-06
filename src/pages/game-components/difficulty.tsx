@@ -1,6 +1,12 @@
 import { Shuffle } from "lucide-react";
 
-export function DifficultyText({ score, handleRandomLevel }: { score: number; handleRandomLevel: () => void }) {
+export function DifficultyText({
+  score,
+  handleRandomLevel,
+}: {
+  score: number;
+  handleRandomLevel: (v: undefined) => void;
+}) {
   let text = "";
   let color = "";
   let emoji = "";
@@ -36,9 +42,9 @@ export function DifficultyText({ score, handleRandomLevel }: { score: number; ha
       </div>
       <Shuffle
         className="absolute right-6 w-6 h-6 text-gray-600 cursor-pointer hover:text-gray-800 transition"
-        onClick={() => handleRandomLevel()}
+        onClick={() => handleRandomLevel(undefined)}
         onKeyPress={(e) => {
-          if (e.key === "Enter" || e.key === " ") handleRandomLevel();
+          if (e.key === "Enter" || e.key === " ") handleRandomLevel(undefined);
         }}
         role="button"
         tabIndex={0}

@@ -1,16 +1,16 @@
 import { useState } from "react";
 
 type LevelButtonsProps = {
-  onSelect: (size: number) => void;
+  onSelect: ({ size }: { size: number }) => void;
 };
 
-export function SizeButtons({ onSelect }: LevelButtonsProps) {
-  const [value, setValue] = useState(10);
+export function SizeSlider({ onSelect }: LevelButtonsProps) {
+  const [value, setValue] = useState(5);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newSize = Number(e.target.value);
     setValue(newSize);
-    onSelect(newSize);
+    onSelect({ size: newSize });
   };
 
   return (

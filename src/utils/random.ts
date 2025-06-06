@@ -8,9 +8,10 @@ export class Random {
     return Random.getLogDistributedRandom(1, 5); // Random gap of 1-5 cells
   };
 
-  static shouldFillSegment = (seed: number): boolean => {
+  static shouldFillSegment = (): boolean => {
     // Simple seeded random number generator (Linear Congruential Generator)
-    const normalized = (Math.cos(seed + 1000) + 1) / 2; // [0,1]
+    const random = this.getLogDistributedRandom(0, 100);
+    const normalized = (Math.cos(random) + 1) / 2; // [0,1]
     const s = Math.floor(normalized * 100); // Scale to [0, 100]
     return s % 4 === 0; // Randomly decide to fill or not based on even/odd
   };
