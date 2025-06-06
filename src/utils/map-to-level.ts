@@ -1,5 +1,4 @@
-import { Difficultty } from "../types";
-import { difficultyLevels, Level } from "./level";
+import { Level } from "./level";
 
 export const createLevelFromMap = (boardMap: (0 | 1)[][]): Level => {
   const size = boardMap.length;
@@ -45,9 +44,7 @@ export const createLevelFromMap = (boardMap: (0 | 1)[][]): Level => {
 
   const maxHintSize = Math.max(...topHints.map((hints) => hints.length), ...leftHints.map((hints) => hints.length));
 
-  const difficulty = Object.keys(difficultyLevels).find(
-    (key) => difficultyLevels[key as Difficultty] === size,
-  ) as Difficultty;
+  const difficulty = "easy"; // Placeholder, you can implement a difficulty calculation function if needed
   return {
     boardMap,
     topHints,

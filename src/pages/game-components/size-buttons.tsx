@@ -1,41 +1,39 @@
-import { Difficultty } from "../../types";
-
 type LevelButtonsProps = {
   onSelect: (size: number) => void;
 };
 
-export function LevelButtons({ onSelect }: LevelButtonsProps) {
+export function SizeButtons({ onSelect }: LevelButtonsProps) {
   return (
     <div className="flex gap-2 mb-4">
       <button
         className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition"
-        onClick={() => onSelect("beginner")}
+        onClick={() => onSelect(5)}
       >
-        Beginner
+        5x5
       </button>
       <button
         className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition"
-        onClick={() => onSelect("easy")}
+        onClick={() => onSelect(10)}
       >
-        Easy
+        10x10
       </button>
       <button
         className="px-4 py-2 bg-yellow-600 text-white rounded hover:bg-yellow-700 transition"
-        onClick={() => onSelect("medium")}
+        onClick={() => onSelect(15)}
       >
-        Medium
+        15x15
       </button>
       <button
         className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition"
-        onClick={() => onSelect("hard")}
+        onClick={() => onSelect(20)}
       >
-        Hard
+        20x20
       </button>
       <button
         className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
-        onClick={() => onSelect("expert")}
+        onClick={() => onSelect(25)}
       >
-        Expert
+        25x25
       </button>
     </div>
   );
