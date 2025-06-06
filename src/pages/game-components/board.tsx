@@ -1,18 +1,21 @@
 import { useEffect, useState } from "react";
 import { CellState } from "../../types";
-import { Level } from "../../levels/levels";
+import { Level } from "../../utils/level";
 import { PlayableCell } from "./board-components/playable-cell";
 import { LeftHintCell, TopHintCell, VoidCell } from "./board-components/hint-cells";
 
 type BoardProps = {
   level: Level;
+  isFinished: boolean;
+  setIsFinished: (isFinished: boolean) => void;
 };
 
-export const Board = ({ level }: BoardProps) => {
+export const Board = ({ level, isFinished, setIsFinished }: BoardProps) => {
   const hintSize = level.maxHintSize;
   const totalRows = level.size + hintSize;
   const totalCols = level.size + hintSize;
 
+  const [boardKey, setBoardKey] = useState(0);
   const [board, setBoard] = useState<CellState[][]>(
     Array(level.size)
       .fill(null)
@@ -20,15 +23,13 @@ export const Board = ({ level }: BoardProps) => {
   );
 
   useEffect(() => {
-    // Initialize the board with the correct size and empty cells
     setBoard(
       Array(level.size)
         .fill(null)
         .map(() => Array(level.size).fill("empty")),
     );
-  }, [level.size]);
-
-  const [isFinished, setIsFinished] = useState(false);
+    setBoardKey((k) => k + 1); // Increment key to force remount
+  }, [level]);
 
   function isGameFinished(board: CellState[][], boardMap: number[][]): boolean {
     for (let row = 0; row < board.length; row++) {
@@ -67,6 +68,7 @@ export const Board = ({ level }: BoardProps) => {
 
   return (
     <div
+      key={boardKey}
       style={{
         display: "grid",
         gridTemplateColumns: `${Array(hintSize).fill("auto").join(" ")} ${Array(level.size).fill("1fr").join(" ")}`,
@@ -76,6 +78,7 @@ export const Board = ({ level }: BoardProps) => {
       }}
       className="w-full h-full bg-gray-400"
     >
+      {/* Render grid cells */}
       {Array.from({ length: totalRows }).map((_, rowIdx) =>
         Array.from({ length: totalCols }).map((_, colIdx) => {
           // Top-left corner: void cells
@@ -94,13 +97,15 @@ export const Board = ({ level }: BoardProps) => {
             const hintValue = hints.length >= hintSize - colIdx ? hints[hints.length - (hintSize - colIdx)] : null;
             return <LeftHintCell key={`left-${rowIdx}-${colIdx}`} value={hintValue} />;
           }
-          // Board cell
+          // Board cell: use board state for rendering
           if (rowIdx >= hintSize && colIdx >= hintSize) {
+            const boardRow = rowIdx - hintSize;
+            const boardCol = colIdx - hintSize;
             return (
               <PlayableCell
                 key={`${rowIdx}-${colIdx}`}
-                state={board[rowIdx - hintSize][colIdx - hintSize]}
-                onClick={(type) => toggleCell(rowIdx - hintSize, colIdx - hintSize, type)}
+                state={board[boardRow][boardCol]}
+                onClick={(type) => toggleCell(boardRow, boardCol, type)}
               />
             );
           }

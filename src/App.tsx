@@ -1,10 +1,11 @@
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 import "./App.css";
 import Game from "./pages/game";
-import { initialLevel } from "./levels/levels";
 import GameWrapper from "./pages/game-level-wrapper";
+import { LevelGenerator } from "./utils/level-generator";
 
 function App() {
+  const initialLevel = LevelGenerator.generate("beginner", 0);
   return (
     <Router>
       <Routes>
