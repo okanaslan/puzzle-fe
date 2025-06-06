@@ -25,7 +25,7 @@ export const FilledCell = ({ fill }: CellProps) => {
       className="min-w-6 min-h-6 border flex items-center justify-center bg-black"
       onMouseDown={onMouseDown}
       onMouseMove={handleMouseMove}
-      onTouchStart={onMouseDown}
+      // onTouchStart={onMouseDown}
       onTouchMove={handleMouseMove}
     />
   );

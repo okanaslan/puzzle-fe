@@ -43,6 +43,7 @@ export const Board = ({ level, isFinished, setIsFinished }: BoardProps) => {
 
   const toggleCell = (row: number, col: number, type: CellState) => {
     if (isFinished) return; // Prevent interaction if finished
+    // console.log(`Toggling cell at (${row}, ${col}) to ${type}`);
 
     const newBoard = board.map((boardRow, rowIndex) =>
       boardRow.map((cellState, colIndex) => {

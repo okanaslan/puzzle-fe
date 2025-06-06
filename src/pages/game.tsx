@@ -14,16 +14,14 @@ export default function Game({ level: initialLevel }: { level: Level }) {
   const [level, setLevel] = useState<Level>(initialLevel);
   const [isFinished, setIsFinished] = useState<boolean>(false);
 
-  const { setIsMouseDown, setIsTouching } = useGame();
+  const { setIsMouseDown } = useGame();
 
   useEffect(() => {
     // Prevent scroll
     document.body.style.overflow = "hidden";
-    document.body.style.touchAction = "none";
     return () => {
       // Restore scroll
       document.body.style.overflow = "";
-      document.body.style.touchAction = "";
     };
   }, []);
 
@@ -38,8 +36,8 @@ export default function Game({ level: initialLevel }: { level: Level }) {
       className="flex flex-col items-center justify-center h-screen w-screen bg-gray-300"
       onMouseDown={() => setIsMouseDown(true)}
       onMouseUp={() => setIsMouseDown(false)}
-      onTouchStart={() => setIsTouching(true)}
-      onTouchEnd={() => setIsTouching(false)}
+      onTouchStart={() => setIsMouseDown(true)}
+      onTouchEnd={() => setIsMouseDown(false)}
     >
       <div className="w-full max-w-xl shadow-2xl rounded-2xl flex flex-col items-center">
         <div className="h-56 w-full bg-gray-200 px-4 rounded-t-2xl flex flex-col items-center gap-2">

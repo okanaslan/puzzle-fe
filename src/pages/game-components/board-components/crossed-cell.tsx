@@ -27,7 +27,7 @@ export const CrossedCell = ({ fill }: CellProps) => {
       onClick={() => fill("empty")}
       onMouseDown={onMouseDown}
       onMouseMove={handleMouseMove}
-      onTouchStart={onMouseDown}
+      // onTouchStart={onMouseDown}
       onTouchMove={handleMouseMove}
     >
       <X className="w-4 h-4 text-gray-600" />
