@@ -44,12 +44,10 @@ export const createLevelFromMap = (boardMap: (0 | 1)[][]): Level => {
 
   const maxHintSize = Math.max(...topHints.map((hints) => hints.length), ...leftHints.map((hints) => hints.length));
 
-  const difficulty = "easy"; // Placeholder, you can implement a difficulty calculation function if needed
   return {
     boardMap,
     topHints,
     leftHints,
-    difficulty,
     maxHintSize,
     size,
   };

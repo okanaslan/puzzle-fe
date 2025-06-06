@@ -3,7 +3,7 @@ import { LevelGenerator } from "../utils/level-generator";
 import { GameProvider } from "../contexts/game-context/game-context-provider";
 
 export default function GameWrapper() {
-  const initialLevel = LevelGenerator.generate(5, 0);
+  const initialLevel = LevelGenerator.generate(5);
 
   return (
     <GameProvider>

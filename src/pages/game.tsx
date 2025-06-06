@@ -26,7 +26,7 @@ export default function Game({ level: initialLevel }: { level: Level }) {
   }, []);
 
   const handleRandomLevel = (config: { size?: number; difficulty?: number } | undefined) => {
-    const selectedLevel = LevelGenerator.generate(config?.size ?? level.size, config?.difficulty ?? level.difficulty);
+    const selectedLevel = LevelGenerator.generate(config?.size ?? level.size);
     setLevel(selectedLevel);
     setIsFinished(false);
   };

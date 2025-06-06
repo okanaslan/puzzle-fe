@@ -6,7 +6,7 @@ import { Random } from "./random";
 export class LevelGenerator {
   static readonly DEFAULT_MAX_RETRIES = 5;
 
-  static generate = (size: number, difficulty?: number): Level => {
+  static generate = (size: number): Level => {
     let boardMap = this.randomBoardGenerator(size);
 
     // Rotate and increase segment sizes 3 times to add complexity
@@ -35,7 +35,7 @@ export class LevelGenerator {
         ...level.leftHints.map((hints) => hints.length),
       );
 
-      const maxRetries = this.DEFAULT_MAX_RETRIES ?? difficulty;
+      const maxRetries = this.DEFAULT_MAX_RETRIES;
       if (++retryCount >= maxRetries) {
         console.warn(`Max retries reached (${maxRetries}). Generating a new random board.`);
         boardMap = this.randomBoardGenerator(size);
