@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import { Level } from "../utils/level";
 import { LevelGenerator } from "../utils/level-generator";
@@ -16,27 +16,42 @@ export default function Game({ level: initialLevel }: { level: Level }) {
 
   const { setIsMouseDown, setIsTouching } = useGame();
 
-  const handleRandomLevel = (size: number) => {
+  useEffect(() => {
+    // Prevent scroll
+    document.body.style.overflow = "hidden";
+    document.body.style.touchAction = "none";
+    return () => {
+      // Restore scroll
+      document.body.style.overflow = "";
+      document.body.style.touchAction = "";
+    };
+  }, []);
+
+  const handleRandomLevel = (size?: number) => {
     const randomSeed = Math.floor(Math.random() * 100000);
-    const selectedLevel = LevelGenerator.generate(size, randomSeed);
+    const selectedLevel = LevelGenerator.generate(size ?? level.size, randomSeed);
     setLevel(selectedLevel);
     setIsFinished(false);
   };
 
   return (
     <div
-      className="flex flex-col items-center justify-center min-h-screen min-w-screen bg-gradient-to-br from-gray-100 to-gray-300 py-6"
+      className="flex flex-col items-center justify-center h-screen w-screen bg-gradient-to-br from-gray-100 to-gray-300 py-6"
       onMouseDown={() => setIsMouseDown(true)}
       onMouseUp={() => setIsMouseDown(false)}
       onTouchStart={() => setIsTouching(true)}
       onTouchEnd={() => setIsTouching(false)}
     >
-      <div className="w-full max-w-xl bg-gray-400 rounded-xl shadow-lg flex flex-col items-center">
-        <h1 className="text-xl font-bold m-2 text-gray-800 tracking-tight">Puzzle Game</h1>
-        <SizeButtons onSelect={handleRandomLevel} />
-        <DifficultyText score={difficultyCalculator(level)} />
-        <Board level={level} isFinished={isFinished} setIsFinished={setIsFinished} />
-        <ModeSwitch />
+      <div className="w-full max-w-xl shadow-lg flex flex-col items-center">
+        <div className="h-40 w-full bg-gray-200 px-4 flex flex-col items-center gap-2">
+          <h1 className="text-xl font-bold text-gray-800 tracking-tight">Puzzle Game</h1>
+          <SizeButtons onSelect={handleRandomLevel} />
+          <DifficultyText score={difficultyCalculator(level)} handleRandomLevel={handleRandomLevel} />
+        </div>
+        <div className="w-full bg-gray-400 py-2 flex flex-col items-center gap-4 rounded-2xl">
+          <Board level={level} isFinished={isFinished} setIsFinished={setIsFinished} />
+          <ModeSwitch />
+        </div>
       </div>
     </div>
   );

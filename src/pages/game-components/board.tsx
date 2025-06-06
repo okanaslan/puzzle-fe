@@ -76,7 +76,6 @@ export const Board = ({ level, isFinished, setIsFinished }: BoardProps) => {
         aspectRatio: "1 / 1",
         width: "100%",
       }}
-      className="w-full h-full bg-gray-400"
     >
       {/* Render grid cells */}
       {Array.from({ length: totalRows }).map((_, rowIdx) =>

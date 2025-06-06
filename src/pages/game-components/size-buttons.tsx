@@ -1,40 +1,37 @@
+import { useState } from "react";
+
 type LevelButtonsProps = {
   onSelect: (size: number) => void;
 };
 
 export function SizeButtons({ onSelect }: LevelButtonsProps) {
+  const [value, setValue] = useState(10);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newSize = Number(e.target.value);
+    setValue(newSize);
+    onSelect(newSize);
+  };
+
   return (
-    <div className="flex gap-2 mb-4">
-      <button
-        className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition"
-        onClick={() => onSelect(5)}
-      >
-        5x5
-      </button>
-      <button
-        className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition"
-        onClick={() => onSelect(10)}
-      >
-        10x10
-      </button>
-      <button
-        className="px-4 py-2 bg-yellow-600 text-white rounded hover:bg-yellow-700 transition"
-        onClick={() => onSelect(15)}
-      >
-        15x15
-      </button>
-      <button
-        className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition"
-        onClick={() => onSelect(20)}
-      >
-        20x20
-      </button>
-      <button
-        className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
-        onClick={() => onSelect(25)}
-      >
-        25x25
-      </button>
+    <div className="flex flex-col items-center mb-4 w-full">
+      <input
+        id="size-slider"
+        type="range"
+        min={5}
+        max={25}
+        step={5}
+        value={value}
+        onChange={handleChange}
+        className="w-64 accent-blue-600"
+      />
+      <div className="flex justify-between w-64 text-xs mt-1 text-black">
+        <span>5x5</span>
+        <span>10x10</span>
+        <span>15x15</span>
+        <span>20x20</span>
+        <span>25x25</span>
+      </div>
     </div>
   );
 }
