@@ -23,7 +23,7 @@ export const CrossedCell = ({ fill }: CellProps) => {
 
   return (
     <div
-      className="min-w-6 min-h-6 border flex items-center justify-center bg-gray-300"
+      className="min-w-4 aspect-square border flex items-center justify-center bg-gray-300"
       onClick={() => fill("empty")}
       onMouseDown={onMouseDown}
       onMouseMove={handleMouseMove}

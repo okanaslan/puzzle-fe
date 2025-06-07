@@ -74,7 +74,6 @@ export const Board = ({ level, isFinished, setIsFinished }: BoardProps) => {
         display: "grid",
         gridTemplateColumns: `${Array(hintSize).fill("auto").join(" ")} ${Array(level.size).fill("1fr").join(" ")}`,
         gridTemplateRows: `${Array(hintSize).fill("auto").join(" ")} ${Array(level.size).fill("1fr").join(" ")}`,
-        aspectRatio: "1 / 1",
         width: "100%",
       }}
     >
