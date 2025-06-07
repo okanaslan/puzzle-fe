@@ -35,7 +35,7 @@ export function DifficultyText({
 
   return (
     <div className="relative flex flex-col items-center mb-4 w-full">
-      <div className={`flex gap-2 mb-4 items-center font-bold text-lg ${color}`}>
+      <div className={`flex gap-2 items-center font-bold text-lg ${color}`}>
         <span>{emoji}</span>
         <span>{`${text}`}</span>
         <span>{emoji}</span>

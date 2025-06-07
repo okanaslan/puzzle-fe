@@ -40,8 +40,8 @@ export default function Game({ level: initialLevel }: { level: Level }) {
       onTouchEnd={() => setIsMouseDown(false)}
     >
       <div className="w-full h-full shadow-2xl rounded-2xl flex flex-col items-center">
-        <div className="h-40 w-full bg-gray-200 px-4 rounded-t-2xl flex flex-col items-center gap-2">
-          <p className="text-2xl font-bold text-gray-800 tracking-tight p-2">Puzzle Game</p>
+        <div className=" w-full bg-gray-200 px-4 rounded-t-2xl flex flex-col items-center gap-2">
+          <p className="text-2xl font-bold text-gray-800 tracking-tight p-2 pt-10">Puzzle Game</p>
           <SizeSlider onSelect={handleRandomLevel} />
           {/* <DifficultySlider onSelect={handleRandomLevel} /> */}
           <DifficultyText score={difficultyCalculator(level)} handleRandomLevel={handleRandomLevel} />
