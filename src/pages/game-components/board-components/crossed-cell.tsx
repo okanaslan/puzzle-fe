@@ -1,34 +1,28 @@
 import { X } from "lucide-react";
-import { CellState } from "../../../types";
 import { useGame } from "../../../contexts/game-context";
+import { CellProps } from "./playable-cells";
 
-type CellProps = {
-  fill: (type: CellState) => void;
-};
-
-export const CrossedCell = ({ fill }: CellProps) => {
-  const { isMouseDown, setIsMouseDown, setMouseDownState, mouseDownState } = useGame();
+export const CrossedCell = ({ row, col }: CellProps) => {
+  const { isMouseDown, setIsMouseDown, setMouseDownState, mouseDownState, fillCell } = useGame();
 
   const onMouseDown = () => {
     setIsMouseDown(true);
     setMouseDownState("empty-cross");
-    fill("empty");
+    fillCell(row, col, "empty");
   };
 
   const handleMouseMove = () => {
     if (isMouseDown && mouseDownState == "empty-cross") {
-      fill("empty");
+      fillCell(row, col, "empty");
     }
   };
 
   return (
     <div
+      id={`cell-${row}-${col}`}
       className="min-w-4 aspect-square border flex items-center justify-center bg-gray-300"
-      onClick={() => fill("empty")}
       onMouseDown={onMouseDown}
       onMouseMove={handleMouseMove}
-      // onTouchStart={onMouseDown}
-      onTouchMove={handleMouseMove}
     >
       <X className="w-4 h-4 text-gray-600" />
     </div>

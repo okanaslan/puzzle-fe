@@ -1,16 +1,15 @@
 import { useState } from "react";
+import { useGame } from "../../contexts/game-context";
 
-type LevelButtonsProps = {
-  onSelect: ({ size }: { size: number }) => void;
-};
-
-export function SizeSlider({ onSelect }: LevelButtonsProps) {
+export function SizeSlider() {
   const [value, setValue] = useState(5);
+
+  const { changeLevel } = useGame();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newSize = Number(e.target.value);
     setValue(newSize);
-    onSelect({ size: newSize });
+    changeLevel(newSize);
   };
 
   return (

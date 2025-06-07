@@ -1,32 +1,27 @@
 import { useGame } from "../../../contexts/game-context";
-import { CellState } from "../../../types";
+import { CellProps } from "./playable-cells";
 
-type CellProps = {
-  fill: (type: CellState) => void;
-};
-
-export const FilledCell = ({ fill }: CellProps) => {
-  const { isMouseDown, setIsMouseDown, setMouseDownState, mouseDownState } = useGame();
+export const FilledCell = ({ row, col }: CellProps) => {
+  const { isMouseDown, setIsMouseDown, setMouseDownState, mouseDownState, fillCell } = useGame();
 
   const onMouseDown = () => {
     setIsMouseDown(true);
     setMouseDownState("empty-fill");
-    fill("empty");
+    fillCell(row, col, "empty");
   };
 
   const handleMouseMove = () => {
     if (isMouseDown && mouseDownState == "empty-fill") {
-      fill("empty");
+      fillCell(row, col, "empty");
     }
   };
 
   return (
     <div
+      id={`cell-${row}-${col}`}
       className="min-w-4 aspect-square border flex items-center justify-center bg-black"
       onMouseDown={onMouseDown}
       onMouseMove={handleMouseMove}
-      // onTouchStart={onMouseDown}
-      onTouchMove={handleMouseMove}
     />
   );
 };

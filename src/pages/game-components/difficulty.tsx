@@ -1,16 +1,15 @@
 import { Shuffle } from "lucide-react";
+import { useGame } from "../../contexts/game-context";
+import { difficultyCalculator } from "../../utils/difficulty-calculator";
 
-export function DifficultyText({
-  score,
-  handleRandomLevel,
-}: {
-  score: number;
-  handleRandomLevel: (v: undefined) => void;
-}) {
+export function DifficultyText() {
+  const { level, changeLevel } = useGame();
+
   let text = "";
   let color = "";
   let emoji = "";
 
+  const score = difficultyCalculator(level);
   if (score <= 10) {
     text = "Beginner";
     color = "text-green-600";
@@ -42,9 +41,9 @@ export function DifficultyText({
       </div>
       <Shuffle
         className="absolute right-6 w-6 h-6 text-gray-600 cursor-pointer hover:text-gray-800 transition"
-        onClick={() => handleRandomLevel(undefined)}
+        onClick={() => changeLevel()}
         onKeyPress={(e) => {
-          if (e.key === "Enter" || e.key === " ") handleRandomLevel(undefined);
+          if (e.key === "Enter" || e.key === " ") changeLevel();
         }}
         role="button"
         tabIndex={0}

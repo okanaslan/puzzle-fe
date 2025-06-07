@@ -1,8 +1,4 @@
-import { useState, useEffect } from "react";
-
-import { Level } from "../utils/level";
-import { LevelGenerator } from "../utils/level-generator";
-import { difficultyCalculator } from "../utils/difficulty-calculator";
+import { useEffect } from "react";
 
 import { Board } from "./game-components/board";
 import { SizeSlider } from "./game-components/size-slider";
@@ -10,10 +6,7 @@ import { DifficultyText } from "./game-components/difficulty";
 import { useGame } from "../contexts/game-context";
 import { ModeSwitch } from "./game-components/mode-switch";
 
-export default function Game({ level: initialLevel }: { level: Level }) {
-  const [level, setLevel] = useState<Level>(initialLevel);
-  const [isFinished, setIsFinished] = useState<boolean>(false);
-
+export default function Game() {
   const { setIsMouseDown } = useGame();
 
   useEffect(() => {
@@ -25,12 +18,6 @@ export default function Game({ level: initialLevel }: { level: Level }) {
     };
   }, []);
 
-  const handleRandomLevel = (config: { size?: number; difficulty?: number } | undefined) => {
-    const selectedLevel = LevelGenerator.generate(config?.size ?? level.size);
-    setLevel(selectedLevel);
-    setIsFinished(false);
-  };
-
   return (
     <div
       className="flex flex-col items-center justify-center w-screen h-screen bg-gray-300"
@@ -41,13 +28,13 @@ export default function Game({ level: initialLevel }: { level: Level }) {
     >
       <div className="w-full h-full shadow-2xl rounded-2xl flex flex-col items-center">
         <div className=" w-full bg-gray-200 px-4 rounded-t-2xl flex flex-col items-center gap-2">
-          <p className="text-2xl font-bold text-gray-800 tracking-tight p-2 pt-10">Puzzle Game</p>
-          <SizeSlider onSelect={handleRandomLevel} />
+          <p className="text-2xl font-bold text-gray-800 tracking-tight pt-16">Puzzle Game</p>
+          <SizeSlider />
           {/* <DifficultySlider onSelect={handleRandomLevel} /> */}
-          <DifficultyText score={difficultyCalculator(level)} handleRandomLevel={handleRandomLevel} />
+          <DifficultyText />
         </div>
         <div className="w-full bg-gray-400 py-2 flex flex-col items-center gap-4 rounded-2xl">
-          <Board level={level} isFinished={isFinished} setIsFinished={setIsFinished} />
+          <Board />
           <ModeSwitch />
         </div>
       </div>
