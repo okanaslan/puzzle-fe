@@ -28,7 +28,7 @@ export default function Game() {
     >
       <div className="w-full h-full shadow-2xl rounded-2xl flex flex-col items-center">
         <div className=" w-full bg-gray-200 px-4 rounded-t-2xl flex flex-col items-center gap-2">
-          <p className="text-2xl font-bold text-gray-800 tracking-tight pt-16">Puzzle Game</p>
+          <p className="text-2xl font-bold text-gray-800 tracking-tight pt-10">Puzzle Game</p>
           <SizeSlider />
           {/* <DifficultySlider onSelect={handleRandomLevel} /> */}
           <DifficultyText />
