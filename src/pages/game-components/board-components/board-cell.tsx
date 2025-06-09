@@ -9,8 +9,8 @@ type CellProps = {
   state: CellState;
 };
 
-const createClassName = (bgColor: string) => {
-  return `min-w-4 aspect-square border flex items-center justify-center transition-colors duration-300 ${bgColor}`;
+const createClassName = (bgColor: string, animation?: string) => {
+  return `min-w-4 aspect-square border flex items-center justify-center transition-colors duration-300 ${bgColor} ${animation}`;
 };
 
 export const BoardCell = ({ row, col, state }: CellProps) => {
@@ -43,12 +43,14 @@ export const BoardCell = ({ row, col, state }: CellProps) => {
     className = createClassName("bg-gray-300");
     content = <X className="w-4 h-4 text-gray-600" />;
   } else if (state === "false-correct") {
-    className = createClassName("bg-rose-400 false-correct-fade");
+    className = createClassName("bg-rose-400", "false-correct-fade");
     content = <X className="w-4 h-4 text-gray-600" />;
   } else if (state === "false-crossed") {
-    className = createClassName("bg-green-400 false-crossed-fade");
+    className = createClassName("bg-green-400", "false-crossed-fade");
   } else if (state === "finished") {
-    className = createClassName("bg-green-400 finish-fade");
+    className = createClassName("bg-green-400", "finish-fade");
+  } else if (state === "failed") {
+    className = createClassName("bg-rose-400", "fail-fade");
   }
   return (
     <>
@@ -81,6 +83,15 @@ export const BoardCell = ({ row, col, state }: CellProps) => {
             }
             .finish-fade {
               animation: finish-fade 1.2s ease-in-out forwards;
+            }
+            @keyframes fail-fade {
+              0%   { background-color: #f87171; opacity: 1; }
+              50%  { background-color: #f87171; opacity: 0.2; }
+              70%  { background-color: #374151; opacity: 0.2; }
+              100% { background-color: #374151; opacity: 1; }
+            }
+            .fail-fade {
+              animation: fail-fade 1.2s ease-in-out forwards;
             }
           `}
         </style>
