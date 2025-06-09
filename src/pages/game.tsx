@@ -26,7 +26,7 @@ export default function Game() {
       onTouchStart={() => setIsMouseDown(true)}
       onTouchEnd={() => setIsMouseDown(false)}
     >
-      <div className="w-full h-full shadow-2xl rounded-2xl flex flex-col items-center">
+      <div className="w-full max-w-[500px] shadow-2xl rounded-2xl flex flex-col items-center">
         <div className=" w-full bg-gray-200 px-4 rounded-t-2xl flex flex-col items-center gap-2">
           <p className="text-2xl font-bold text-gray-800 tracking-tight pt-10">Puzzle Game</p>
           <SizeSlider />

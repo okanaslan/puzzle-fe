@@ -1,6 +1,6 @@
 import React, { ReactNode, useEffect, useState } from "react";
 import { GameContext } from "./game-context";
-import { CellState } from "../../types";
+import { CellAction, CellState } from "../../types";
 import { Level } from "../../utils/level";
 import { LevelGenerator } from "../../utils/level-generator";
 
@@ -15,17 +15,14 @@ export interface GameContextProps {
   setIsMouseDown: React.Dispatch<React.SetStateAction<boolean>>;
   clickMode: "fill" | "cross";
   setClickMode: React.Dispatch<React.SetStateAction<"fill" | "cross">>;
-  mouseDownState: "cross" | "fill" | "empty-cross" | "empty-fill" | null;
-  setMouseDownState: React.Dispatch<React.SetStateAction<"cross" | "fill" | "empty-cross" | "empty-fill" | null>>;
 
   // Functions
   changeLevel: (size?: number) => void;
-  fillCell: (row: number, col: number, type: CellState) => void;
+  fillCell: (row: number, col: number, action: CellAction) => void;
 }
 
 export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [isMouseDown, setIsMouseDown] = useState(false);
-  const [mouseDownState, setMouseDownState] = useState<"cross" | "fill" | "empty-cross" | "empty-fill" | null>(null);
   const [clickMode, setClickMode] = useState<"fill" | "cross">("fill");
   // const [boardKey, setBoardKey] = useState(0);
 
@@ -48,29 +45,6 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   }, [level]);
 
   useEffect(() => {
-    setMouseDownState("fill");
-  }, [setIsMouseDown]);
-
-  // useEffect(() => {
-  //   const onTouchMove = (event: TouchEvent) => {
-  //     const touch = event.touches[0];
-  //     console.log("Touch move detected:", touch.clientX, touch.clientY);
-  //     const element = document.elementFromPoint(touch.clientX, touch.clientY);
-  //     const id = element?.id;
-  //     if (!id) return;
-
-  //     const [row, col] = id.split("-").map(Number);
-  //     const cell = board[row - 1][col - 1];
-
-  //     if (touch && handleGlobalTouchMove.current) {
-  //       handleGlobalTouchMove.current(touch.clientX, touch.clientY);
-  //     }
-  //   };
-  //   document.addEventListener("touchmove", onTouchMove, { passive: false });
-  //   return () => document.removeEventListener("touchmove", onTouchMove);
-  // }, []);
-
-  useEffect(() => {
     const handleTouchMove = (e: TouchEvent) => {
       const touch = e.touches[0];
       if (!touch) return;
@@ -81,14 +55,11 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       const [row, col] = id.split("-").slice(1).map(Number);
       if (isNaN(row) || isNaN(col)) return;
 
-      if (mouseDownState === "empty-fill") {
-        fillCell(row, col, "empty");
-      } else if (mouseDownState === "empty-cross") {
-        fillCell(row, col, "empty");
-      } else if (mouseDownState === "fill") {
-        fillCell(row, col, "filled");
-      } else if (mouseDownState === "cross") {
-        fillCell(row, col, "crossed");
+      // TODO: Sadece ayni dogrultudakileri işle
+      if (clickMode === "fill") {
+        fillCell(row, col, "select");
+      } else if (clickMode === "cross") {
+        fillCell(row, col, "cross");
       }
     };
 
@@ -97,13 +68,13 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     return () => {
       document.removeEventListener("touchmove", handleTouchMove);
     };
-  }, [board, mouseDownState]);
+  }, [board, clickMode]);
 
   function isGameFinished(board: CellState[][], boardMap: number[][]): boolean {
     for (let row = 0; row < board.length; row++) {
       for (let col = 0; col < board[row].length; col++) {
-        if (boardMap[row][col] === 1 && board[row][col] !== "filled") return false;
-        if (boardMap[row][col] === 0 && board[row][col] === "filled") return false;
+        if (boardMap[row][col] === 1 && board[row][col] !== "correct") return false;
+        if (boardMap[row][col] === 0 && board[row][col] === "correct") return false;
       }
     }
     return true;
@@ -115,14 +86,23 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     setIsFinished(false);
   };
 
-  const fillCell = (row: number, col: number, type: CellState) => {
+  const fillCell = (row: number, col: number, action: CellAction) => {
     if (isFinished) return; // Prevent interaction if finished
-    // console.log(`Filling cell at (${row}, ${col}) with ${type}`);
+
+    const isCorrect = level.boardMap[row][col] === 1;
 
     const newBoard = board.map((boardRow, rowIndex) =>
       boardRow.map((cellState, colIndex) => {
         if (rowIndex === row && colIndex === col) {
-          return type;
+          if (isCorrect && action === "select") {
+            return "correct";
+          } else if (!isCorrect && action === "select") {
+            return "false-correct";
+          } else if (!isCorrect && action === "cross") {
+            return "crossed";
+          } else if (isCorrect && action === "cross") {
+            return "false-crossed";
+          }
         }
         return cellState;
       }),
@@ -149,8 +129,6 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         setIsMouseDown,
         clickMode,
         setClickMode,
-        mouseDownState,
-        setMouseDownState,
 
         // Functions
         changeLevel,

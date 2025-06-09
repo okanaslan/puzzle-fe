@@ -2,20 +2,19 @@ import { useGame } from "../../../contexts/game-context";
 import { CellProps } from "./playable-cells";
 
 export const EmptyCell = ({ row, col }: CellProps) => {
-  const { isMouseDown, setIsMouseDown, clickMode, setMouseDownState, mouseDownState, fillCell } = useGame();
+  const { isMouseDown, setIsMouseDown, clickMode, fillCell } = useGame();
 
   const onMouseDown = () => {
     setIsMouseDown(true);
-    fillCell(row, col, clickMode == "fill" ? "filled" : "crossed");
-    setMouseDownState(clickMode == "fill" ? "fill" : "cross");
+    fillCell(row, col, clickMode == "fill" ? "select" : "cross");
   };
 
   const handleMouseMove = () => {
-    if (isMouseDown && mouseDownState == "fill") {
-      fillCell(row, col, clickMode == "fill" ? "filled" : "crossed");
+    if (isMouseDown && clickMode == "fill") {
+      fillCell(row, col, "select");
     }
-    if (isMouseDown && mouseDownState == "cross") {
-      fillCell(row, col, clickMode == "fill" ? "filled" : "crossed");
+    if (isMouseDown && clickMode == "cross") {
+      fillCell(row, col, "cross");
     }
   };
 
