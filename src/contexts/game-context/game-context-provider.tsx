@@ -218,6 +218,48 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     return () => window.removeEventListener("keydown", handleSpace);
   }, []);
 
+  useEffect(() => {
+    let lastShake = 0;
+    let lastX: number | null = null;
+    let lastY: number | null = null;
+    let lastZ: number | null = null;
+
+    function handleMotion(event: DeviceMotionEvent) {
+      if (
+        event.accelerationIncludingGravity &&
+        event.accelerationIncludingGravity.x !== null &&
+        event.accelerationIncludingGravity.y !== null &&
+        event.accelerationIncludingGravity.z !== null
+      ) {
+        const { x, y, z } = event.accelerationIncludingGravity;
+        if (lastX !== null && lastY !== null && lastZ !== null) {
+          const deltaX = Math.abs(x - lastX);
+          const deltaY = Math.abs(y - lastY);
+          const deltaZ = Math.abs(z - lastZ);
+
+          // Simple shake detection threshold
+          if (deltaX + deltaY + deltaZ > 25) {
+            const now = Date.now();
+            if (now - lastShake > 1000) {
+              // prevent rapid toggling
+              setClickMode((prev) => (prev === "fill" ? "cross" : "fill"));
+              lastShake = now;
+            }
+          }
+        }
+        lastX = x;
+        lastY = y;
+        lastZ = z;
+      }
+    }
+
+    window.addEventListener("devicemotion", handleMotion);
+
+    return () => {
+      window.removeEventListener("devicemotion", handleMotion);
+    };
+  }, []);
+
   return (
     <GameContext.Provider
       value={{
