@@ -20,7 +20,6 @@ export interface GameContextProps {
 
   // Functions
   newLevel: (size?: number) => void;
-  fillCell: (row: number, col: number, action: CellAction) => void;
 }
 
 export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
@@ -112,12 +111,6 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       dragStartRef.current = { row, col };
     }
 
-    // Don't return early if already filled, just skip updating
-    if (board[row][col] !== "empty") {
-      // Already filled/crossed, do nothing, but allow drag to continue
-      return;
-    }
-
     if (clickMode === "fill") {
       fillCell(row, col, "select");
     } else if (clickMode === "cross") {
@@ -145,6 +138,10 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const fillCell = (row: number, col: number, action: CellAction) => {
     if (isFinished) return; // Prevent interaction if finished
 
+    if (board[row][col] !== "empty") {
+      return;
+    }
+
     const isCorrect = level.boardMap[row][col] === 1;
 
     const newBoard = board.map((boardRow, rowIndex) =>
@@ -166,18 +163,18 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       }),
     );
 
-    // if (lives.current <= 0) {
-    //   setIsFinished(true);
-    //   setBoard(newBoard.map((rowArr, i) => rowArr.map((cell, j) => (level.boardMap[i][j] === 1 ? "correct" : cell))));
-    //   return;
-    // }
-
+    if (lives.current <= 0) {
+      setIsFinished(true);
+      setBoard(newBoard.map((rowArr, i) => rowArr.map((cell, j) => (level.boardMap[i][j] === 1 ? "correct" : cell))));
+      return;
+    }
     if (isGameFinished(newBoard, level.boardMap)) {
       setIsFinished(true);
       setBoard(newBoard.map((rowArr, i) => rowArr.map((cell, j) => (level.boardMap[i][j] === 1 ? "correct" : cell))));
-    } else {
-      setBoard(newBoard);
+      return;
     }
+
+    setBoard(newBoard);
   };
 
   return (
@@ -195,7 +192,6 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
         // Functions
         newLevel,
-        fillCell,
       }}
     >
       {children}

@@ -13,7 +13,7 @@ export function SizeSlider() {
   };
 
   return (
-    <div className="flex flex-col items-center mb-4 w-full">
+    <div className="flex flex-col items-center w-full">
       <input
         id="size-slider"
         type="range"

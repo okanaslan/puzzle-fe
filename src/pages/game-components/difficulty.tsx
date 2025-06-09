@@ -33,24 +33,22 @@ export function DifficultyText() {
   }
 
   return (
-    <div className="relative flex flex-col items-center mb-4 w-full">
-      <div className="flex flex-row items-center justify-center w-full px-4 py-2 bg-gray-200 rounded-lg shadow-md">
-        <div className="absolute text-gray-600 text-md left-4">
-          {lives.current > 0 ? `${"❤️".repeat(lives.current)}${"🤍".repeat(lives.max - lives.current)}` : "Game Over"}
-        </div>
-        <div className={`flex gap-2 items-center font-bold text-lg ${color} px-10`}>
-          <span>{emoji}</span>
-          <span>{`${text}`}</span>
-          <span>{emoji}</span>
-        </div>
-        <Shuffle
-          className="absolute right-4 w-6 h-6 text-gray-600 cursor-pointer hover:text-gray-800 transition"
-          onClick={() => newLevel()}
-          role="button"
-          tabIndex={0}
-          aria-label="Shuffle Level"
-        />
+    <div className="relative flex flex-row items-center justify-center w-full p-4 bg-gray-200">
+      <div className="absolute text-gray-600 text-md left-4">
+        {lives.current > 0 ? `${"❤️".repeat(lives.current)}${"🤍".repeat(lives.max - lives.current)}` : "Game Over"}
       </div>
+      <div className={`flex gap-2 items-center font-bold text-lg ${color} px-10`}>
+        <span>{emoji}</span>
+        <span>{`${text}`}</span>
+        <span>{emoji}</span>
+      </div>
+      <Shuffle
+        className="absolute right-4 w-6 h-6 text-gray-600 cursor-pointer hover:text-gray-800 transition"
+        onClick={() => newLevel()}
+        role="button"
+        tabIndex={0}
+        aria-label="Shuffle Level"
+      />
     </div>
   );
 }
