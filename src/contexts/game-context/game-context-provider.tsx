@@ -68,16 +68,34 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       fillElement(element);
     };
 
+    const handleMouseDown = (e: MouseEvent) => {
+      const element = document.elementFromPoint(e.clientX, e.clientY);
+      const id = element?.id;
+      if (!id) return;
+      const [row, col] = id.split("-").slice(1).map(Number);
+      if (isNaN(row) || isNaN(col)) return;
+      dragStartRef.current = { row, col };
+      fillElement(element);
+    };
+
     const handleTouchEnd = () => {
       dragStartRef.current = null;
     };
 
+    const handleMouseUp = () => {
+      dragStartRef.current = null;
+    };
+
+    document.addEventListener("mousedown", handleMouseDown);
     document.addEventListener("touchstart", handleTouchStart);
     document.addEventListener("touchend", handleTouchEnd);
+    document.addEventListener("mouseup", handleMouseUp);
 
     return () => {
+      document.removeEventListener("mousedown", handleMouseDown);
       document.removeEventListener("touchstart", handleTouchStart);
       document.removeEventListener("touchend", handleTouchEnd);
+      document.removeEventListener("mouseup", handleMouseUp);
     };
   }, [board, clickMode]);
 
@@ -89,11 +107,20 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       fillElement(element);
     };
 
+    const handleMouseMove = (e: MouseEvent) => {
+      if (dragStartRef.current) {
+        const element = document.elementFromPoint(e.clientX, e.clientY);
+        fillElement(element);
+      }
+    };
+
     document.addEventListener("touchmove", handleTouchMove);
+    document.addEventListener("mousemove", handleMouseMove);
 
     return () => {
       // console.log("Removing touchmove listener");
       document.removeEventListener("touchmove", handleTouchMove);
+      document.removeEventListener("mousemove", handleMouseMove);
     };
   }, [board, clickMode]);
 
