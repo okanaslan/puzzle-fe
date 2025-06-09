@@ -121,8 +121,10 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   function isGameFinished(board: CellState[][], boardMap: number[][]): boolean {
     for (let row = 0; row < board.length; row++) {
       for (let col = 0; col < board[row].length; col++) {
-        if (boardMap[row][col] === 1 && board[row][col] !== "correct") return false;
-        if (boardMap[row][col] === 0 && board[row][col] === "correct") return false;
+        // All cells that should be filled must be "correct" or "should-be-correct"
+        if (boardMap[row][col] === 1 && board[row][col] !== "correct" && board[row][col] !== "should-be-correct") {
+          return false;
+        }
       }
     }
     return true;
@@ -142,21 +144,21 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       return;
     }
 
-    const isCorrect = level.boardMap[row][col] === 1;
+    const shouldSelect = level.boardMap[row][col] === 1;
 
     const newBoard = board.map((boardRow, rowIndex) =>
       boardRow.map((cellState, colIndex) => {
         if (rowIndex === row && colIndex === col) {
-          if (isCorrect && action === "select") {
+          if (shouldSelect && action === "select") {
             return "correct";
-          } else if (!isCorrect && action === "select") {
-            lives.current -= 1;
-            return "false-correct";
-          } else if (!isCorrect && action === "cross") {
+          } else if (!shouldSelect && action === "cross") {
             return "crossed";
-          } else if (isCorrect && action === "cross") {
+          } else if (!shouldSelect && action === "select") {
             lives.current -= 1;
-            return "false-crossed";
+            return "should-be-crossed";
+          } else if (shouldSelect && action === "cross") {
+            lives.current -= 1;
+            return "should-be-correct";
           }
         }
         return cellState;
