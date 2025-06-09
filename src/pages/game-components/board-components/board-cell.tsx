@@ -30,6 +30,8 @@ export const BoardCell = ({ row, col, state }: CellProps) => {
   }, [state]);
 
   let content = null;
+  const extraBorder = [row % 5 === 0 ? "border-t-2" : "", col % 5 === 0 ? "border-l-2" : ""].join(" ").trim();
+
   let className = "min-w-4 aspect-square border flex items-center justify-center transition-colors duration-300";
 
   switch (state) {
@@ -106,7 +108,11 @@ export const BoardCell = ({ row, col, state }: CellProps) => {
           `}
         </style>
       )}
-      <div ref={cellRef} id={`cell-${row}-${col}`} className={className}>
+      <div
+        ref={cellRef}
+        id={`cell-${row}-${col}`}
+        className={`${className} border-[0.5px] border-black ${extraBorder}`}
+      >
         {content}
       </div>
     </>

@@ -16,7 +16,6 @@ export const Board = () => {
 
   return (
     <div
-      // key={boardKey}
       style={{
         display: "grid",
         gridTemplateColumns: `${Array(hintSize).fill("auto").join(" ")} ${Array(level.size).fill("1fr").join(" ")}`,
@@ -47,6 +46,9 @@ export const Board = () => {
           if (rowIdx >= hintSize && colIdx >= hintSize) {
             const boardRow = rowIdx - hintSize;
             const boardCol = colIdx - hintSize;
+
+            // Add a wider border every 5 rows/columns
+
             return (
               <BoardCell
                 key={`${boardRow}-${boardCol}`}
