@@ -1,4 +1,4 @@
-import React, { ReactNode, useEffect, useState } from "react";
+import React, { ReactNode, useEffect, useMemo, useState } from "react";
 import { GameContext } from "./game-context";
 import { CellAction, CellState } from "../../types";
 import { Level } from "../../utils/level";
@@ -15,6 +15,10 @@ export interface GameContextProps {
   setIsMouseDown: React.Dispatch<React.SetStateAction<boolean>>;
   clickMode: "fill" | "cross";
   setClickMode: React.Dispatch<React.SetStateAction<"fill" | "cross">>;
+  lives: {
+    max: number;
+    current: number;
+  };
 
   // Functions
   changeLevel: (size?: number) => void;
@@ -26,7 +30,7 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [clickMode, setClickMode] = useState<"fill" | "cross">("fill");
   // const [boardKey, setBoardKey] = useState(0);
 
-  const initialLevel = React.useMemo(() => LevelGenerator.generate(5), []);
+  const initialLevel = useMemo(() => LevelGenerator.generate(5), []);
   const [level, setLevel] = useState<Level>(initialLevel);
   const [isFinished, setIsFinished] = useState<boolean>(false);
   const [board, setBoard] = useState<CellState[][]>(
@@ -34,6 +38,13 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       .fill(null)
       .map(() => Array(level.size).fill("empty")),
   );
+
+  const lives = useMemo(() => {
+    return {
+      max: 3,
+      current: 3,
+    };
+  }, [level]);
 
   useEffect(() => {
     setBoard(
@@ -97,16 +108,24 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
           if (isCorrect && action === "select") {
             return "correct";
           } else if (!isCorrect && action === "select") {
+            lives.current -= 1;
             return "false-correct";
           } else if (!isCorrect && action === "cross") {
             return "crossed";
           } else if (isCorrect && action === "cross") {
+            lives.current -= 1;
             return "false-crossed";
           }
         }
         return cellState;
       }),
     );
+
+    if (lives.current <= 0) {
+      setIsFinished(true);
+      setBoard(newBoard.map((rowArr, i) => rowArr.map((cell, j) => (level.boardMap[i][j] === 1 ? "correct" : cell))));
+      return;
+    }
 
     if (isGameFinished(newBoard, level.boardMap)) {
       setIsFinished(true);
@@ -129,6 +148,7 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         setIsMouseDown,
         clickMode,
         setClickMode,
+        lives,
 
         // Functions
         changeLevel,
