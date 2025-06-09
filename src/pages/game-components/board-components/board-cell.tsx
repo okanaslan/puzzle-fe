@@ -9,6 +9,10 @@ type CellProps = {
   state: CellState;
 };
 
+const createClassName = (bgColor: string) => {
+  return `min-w-4 aspect-square border flex items-center justify-center transition-colors duration-300 ${bgColor}`;
+};
+
 export const BoardCell = ({ row, col, state }: CellProps) => {
   const cellRef = useRef<HTMLDivElement>(null);
 
@@ -34,18 +38,16 @@ export const BoardCell = ({ row, col, state }: CellProps) => {
   if (state === "empty") {
     // nothing
   } else if (state === "correct") {
-    className += " bg-green-400";
+    className = createClassName("bg-green-400");
   } else if (state === "crossed") {
-    className += " bg-gray-300";
+    className = createClassName("bg-gray-300");
     content = <X className="w-4 h-4 text-gray-600" />;
   } else if (state === "false-correct") {
-    className += " bg-rose-400";
+    className = createClassName("bg-rose-400 false-correct-fade");
     content = <X className="w-4 h-4 text-gray-600" />;
   } else if (state === "false-crossed") {
-    className += " bg-rose-400";
-    content = <X className="w-4 h-4 text-gray-600" />;
+    className = createClassName("bg-green-400 false-crossed-fade");
   }
-
   return (
     <>
       {(state === "false-correct" || state === "false-crossed") && (
@@ -54,11 +56,20 @@ export const BoardCell = ({ row, col, state }: CellProps) => {
             @keyframes false-correct-fade {
               0%   { background-color: #f87171; opacity: 1; }
               50%  { background-color: #f87171; opacity: 0.2; }
-              70%  { background-color: #4ade80; opacity: 0.2; }
-              100% { background-color: #4ade80; opacity: 1; }
+              70%  { background-color: #d1d5db; opacity: 0.2; }
+              100% { background-color: #d1d5db; opacity: 1; }
             }
             .false-correct-fade {
               animation: false-correct-fade 1.2s ease-in-out forwards;
+            }
+            @keyframes false-crossed-fade {
+              0%   { background-color: #f87171; opacity: 1; }
+              50%  { background-color: #f87171; opacity: 0.2; }
+              70%  { background-color: #4ade80; opacity: 0.2; }
+              100% { background-color: #4ade80; opacity: 1; }
+            }
+            .false-crossed-fade {
+              animation: false-crossed-fade 1.2s ease-in-out forwards;
             }
           `}
         </style>

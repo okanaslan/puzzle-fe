@@ -113,7 +113,7 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
 
     // Don't return early if already filled, just skip updating
-    if (board[row][col] === "correct" || board[row][col] === "crossed") {
+    if (board[row][col] !== "empty") {
       // Already filled/crossed, do nothing, but allow drag to continue
       return;
     }
