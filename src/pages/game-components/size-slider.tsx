@@ -4,12 +4,12 @@ import { useGame } from "../../contexts/game-context";
 export function SizeSlider() {
   const [value, setValue] = useState(5);
 
-  const { changeLevel } = useGame();
+  const { newLevel } = useGame();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newSize = Number(e.target.value);
     setValue(newSize);
-    changeLevel(newSize);
+    newLevel(newSize);
   };
 
   return (

@@ -3,7 +3,7 @@ import { useGame } from "../../contexts/game-context";
 import { difficultyCalculator } from "../../utils/difficulty-calculator";
 
 export function DifficultyText() {
-  const { level, changeLevel, lives } = useGame();
+  const { level, newLevel, lives } = useGame();
 
   let text = "";
   let color = "";
@@ -45,7 +45,7 @@ export function DifficultyText() {
         </div>
         <Shuffle
           className="absolute right-4 w-6 h-6 text-gray-600 cursor-pointer hover:text-gray-800 transition"
-          onClick={() => changeLevel()}
+          onClick={() => newLevel()}
           role="button"
           tabIndex={0}
           aria-label="Shuffle Level"

@@ -1,4 +1,4 @@
-import React, { ReactNode, useEffect, useMemo, useState } from "react";
+import React, { ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import { GameContext } from "./game-context";
 import { CellAction, CellState } from "../../types";
 import { Level } from "../../utils/level";
@@ -21,16 +21,16 @@ export interface GameContextProps {
   };
 
   // Functions
-  changeLevel: (size?: number) => void;
+  newLevel: (size?: number) => void;
   fillCell: (row: number, col: number, action: CellAction) => void;
 }
 
 export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+  const initialLevel = useMemo(() => LevelGenerator.generate(5), []);
+
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [clickMode, setClickMode] = useState<"fill" | "cross">("fill");
-  // const [boardKey, setBoardKey] = useState(0);
 
-  const initialLevel = useMemo(() => LevelGenerator.generate(5), []);
   const [level, setLevel] = useState<Level>(initialLevel);
   const [isFinished, setIsFinished] = useState<boolean>(false);
   const [board, setBoard] = useState<CellState[][]>(
@@ -44,6 +44,7 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       max: 3,
       current: 3,
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [level]);
 
   useEffect(() => {
@@ -52,8 +53,35 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         .fill(null)
         .map(() => Array(level.size).fill("empty")),
     );
-    // setBoardKey((k) => k + 1); // Increment key to force remount
   }, [level]);
+
+  // Track drag start position
+  const dragStartRef = useRef<{ row: number; col: number } | null>(null);
+
+  useEffect(() => {
+    const handleTouchStart = (e: TouchEvent) => {
+      const touch = e.touches[0];
+      if (!touch) return;
+      const element = document.elementFromPoint(touch.clientX, touch.clientY);
+      const id = element?.id;
+      if (!id) return;
+      const [row, col] = id.split("-").slice(1).map(Number);
+      if (isNaN(row) || isNaN(col)) return;
+      dragStartRef.current = { row, col };
+    };
+
+    const handleTouchEnd = () => {
+      dragStartRef.current = null;
+    };
+
+    document.addEventListener("touchstart", handleTouchStart);
+    document.addEventListener("touchend", handleTouchEnd);
+
+    return () => {
+      document.removeEventListener("touchstart", handleTouchStart);
+      document.removeEventListener("touchend", handleTouchEnd);
+    };
+  }, []);
 
   useEffect(() => {
     const handleTouchMove = (e: TouchEvent) => {
@@ -61,17 +89,7 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       if (!touch) return;
 
       const element = document.elementFromPoint(touch.clientX, touch.clientY);
-      const id = element?.id;
-      if (!id) return;
-      const [row, col] = id.split("-").slice(1).map(Number);
-      if (isNaN(row) || isNaN(col)) return;
-
-      // TODO: Sadece ayni dogrultudakileri işle
-      if (clickMode === "fill") {
-        fillCell(row, col, "select");
-      } else if (clickMode === "cross") {
-        fillCell(row, col, "cross");
-      }
+      fillElement(element);
     };
 
     document.addEventListener("touchmove", handleTouchMove);
@@ -80,6 +98,28 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       document.removeEventListener("touchmove", handleTouchMove);
     };
   }, [board, clickMode]);
+
+  function fillElement(element: Element | null) {
+    const id = element?.id;
+    if (!id) return;
+    const [row, col] = id.split("-").slice(1).map(Number);
+    if (isNaN(row) || isNaN(col)) return;
+
+    // Only process cells in the same direction as drag start
+    if (dragStartRef.current) {
+      const { row: startRow, col: startCol } = dragStartRef.current;
+      if (row !== startRow && col !== startCol) return; // Not same row or col
+    } else {
+      // If no drag start, treat this as the start
+      dragStartRef.current = { row, col };
+    }
+
+    if (clickMode === "fill") {
+      fillCell(row, col, "select");
+    } else if (clickMode === "cross") {
+      fillCell(row, col, "cross");
+    }
+  }
 
   function isGameFinished(board: CellState[][], boardMap: number[][]): boolean {
     for (let row = 0; row < board.length; row++) {
@@ -91,7 +131,8 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     return true;
   }
 
-  const changeLevel = (size?: number) => {
+  // MARK: Functions
+  const newLevel = (size?: number) => {
     const selectedLevel = LevelGenerator.generate(size ?? level.size);
     setLevel(selectedLevel);
     setIsFinished(false);
@@ -121,11 +162,11 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       }),
     );
 
-    if (lives.current <= 0) {
-      setIsFinished(true);
-      setBoard(newBoard.map((rowArr, i) => rowArr.map((cell, j) => (level.boardMap[i][j] === 1 ? "correct" : cell))));
-      return;
-    }
+    // if (lives.current <= 0) {
+    //   setIsFinished(true);
+    //   setBoard(newBoard.map((rowArr, i) => rowArr.map((cell, j) => (level.boardMap[i][j] === 1 ? "correct" : cell))));
+    //   return;
+    // }
 
     if (isGameFinished(newBoard, level.boardMap)) {
       setIsFinished(true);
@@ -151,7 +192,7 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         lives,
 
         // Functions
-        changeLevel,
+        newLevel,
         fillCell,
       }}
     >
