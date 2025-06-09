@@ -165,12 +165,12 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
     if (lives.current <= 0) {
       setIsFinished(true);
-      setBoard(newBoard.map((rowArr, i) => rowArr.map((cell, j) => (level.boardMap[i][j] === 1 ? "correct" : cell))));
+      setBoard(newBoard.map((rowArr, i) => rowArr.map((cell, j) => (level.boardMap[i][j] === 1 ? "finished" : cell))));
       return;
     }
     if (isGameFinished(newBoard, level.boardMap)) {
       setIsFinished(true);
-      setBoard(newBoard.map((rowArr, i) => rowArr.map((cell, j) => (level.boardMap[i][j] === 1 ? "correct" : cell))));
+      setBoard(newBoard.map((rowArr, i) => rowArr.map((cell, j) => (level.boardMap[i][j] === 1 ? "finished" : cell))));
       return;
     }
 

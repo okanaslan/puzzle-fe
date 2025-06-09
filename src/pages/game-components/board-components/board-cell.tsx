@@ -38,7 +38,7 @@ export const BoardCell = ({ row, col, state }: CellProps) => {
   if (state === "empty") {
     // nothing
   } else if (state === "correct") {
-    className = createClassName("bg-green-400");
+    className = createClassName("bg-gray-700");
   } else if (state === "crossed") {
     className = createClassName("bg-gray-300");
     content = <X className="w-4 h-4 text-gray-600" />;
@@ -47,6 +47,8 @@ export const BoardCell = ({ row, col, state }: CellProps) => {
     content = <X className="w-4 h-4 text-gray-600" />;
   } else if (state === "false-crossed") {
     className = createClassName("bg-green-400 false-crossed-fade");
+  } else if (state === "finished") {
+    className = createClassName("bg-green-400 finish-fade");
   }
   return (
     <>
@@ -70,6 +72,15 @@ export const BoardCell = ({ row, col, state }: CellProps) => {
             }
             .false-crossed-fade {
               animation: false-crossed-fade 1.2s ease-in-out forwards;
+            }
+            @keyframes finish-fade {
+              0%   { background-color: #374151; opacity: 1; }
+              50%  { background-color: #374151; opacity: 0.2; }
+              70%  { background-color: #4ade80; opacity: 0.2; }
+              100% { background-color: #4ade80; opacity: 1; }
+            }
+            .finish-fade {
+              animation: finish-fade 1.2s ease-in-out forwards;
             }
           `}
         </style>
