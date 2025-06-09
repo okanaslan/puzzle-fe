@@ -11,8 +11,6 @@ export interface GameContextProps {
   setIsFinished: React.Dispatch<React.SetStateAction<boolean>>;
   board: CellState[][];
   setBoard: React.Dispatch<React.SetStateAction<CellState[][]>>;
-  isMouseDown: boolean;
-  setIsMouseDown: React.Dispatch<React.SetStateAction<boolean>>;
   clickMode: "fill" | "cross";
   setClickMode: React.Dispatch<React.SetStateAction<"fill" | "cross">>;
   lives: {
@@ -28,7 +26,6 @@ export interface GameContextProps {
 export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const initialLevel = useMemo(() => LevelGenerator.generate(5), []);
 
-  const [isMouseDown, setIsMouseDown] = useState(false);
   const [clickMode, setClickMode] = useState<"fill" | "cross">("fill");
 
   const [level, setLevel] = useState<Level>(initialLevel);
@@ -68,6 +65,8 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       const [row, col] = id.split("-").slice(1).map(Number);
       if (isNaN(row) || isNaN(col)) return;
       dragStartRef.current = { row, col };
+
+      fillElement(element);
     };
 
     const handleTouchEnd = () => {
@@ -81,13 +80,12 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       document.removeEventListener("touchstart", handleTouchStart);
       document.removeEventListener("touchend", handleTouchEnd);
     };
-  }, []);
+  }, [board, clickMode]);
 
   useEffect(() => {
     const handleTouchMove = (e: TouchEvent) => {
       const touch = e.touches[0];
       if (!touch) return;
-
       const element = document.elementFromPoint(touch.clientX, touch.clientY);
       fillElement(element);
     };
@@ -95,6 +93,7 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     document.addEventListener("touchmove", handleTouchMove);
 
     return () => {
+      // console.log("Removing touchmove listener");
       document.removeEventListener("touchmove", handleTouchMove);
     };
   }, [board, clickMode]);
@@ -110,8 +109,13 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       const { row: startRow, col: startCol } = dragStartRef.current;
       if (row !== startRow && col !== startCol) return; // Not same row or col
     } else {
-      // If no drag start, treat this as the start
       dragStartRef.current = { row, col };
+    }
+
+    // Don't return early if already filled, just skip updating
+    if (board[row][col] === "correct" || board[row][col] === "crossed") {
+      // Already filled/crossed, do nothing, but allow drag to continue
+      return;
     }
 
     if (clickMode === "fill") {
@@ -185,8 +189,6 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         setIsFinished,
         board,
         setBoard,
-        isMouseDown,
-        setIsMouseDown,
         clickMode,
         setClickMode,
         lives,

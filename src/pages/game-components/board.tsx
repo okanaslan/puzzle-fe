@@ -1,4 +1,4 @@
-import { PlayableCell } from "./board-components/playable-cells";
+import { BoardCell } from "./board-components/board-cell";
 import { LeftHintCell, TopHintCell, VoidCell } from "./board-components/hint-cells";
 import { useGame } from "../../contexts/game-context";
 
@@ -10,7 +10,7 @@ export const Board = () => {
   const totalCols = level.size + hintSize;
 
   if (board.length !== level.size || board[0].length !== level.size) {
-    console.error("Board size does not match level size");
+    // console.error("Board size does not match level size");
     return null;
   }
 
@@ -48,7 +48,7 @@ export const Board = () => {
             const boardRow = rowIdx - hintSize;
             const boardCol = colIdx - hintSize;
             return (
-              <PlayableCell
+              <BoardCell
                 key={`${boardRow}-${boardCol}`}
                 row={boardRow}
                 col={boardCol}

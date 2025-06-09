@@ -37,7 +37,7 @@ export class LevelGenerator {
 
       const maxRetries = this.DEFAULT_MAX_RETRIES;
       if (++retryCount >= maxRetries) {
-        console.warn(`Max retries reached (${maxRetries}). Generating a new random board.`);
+        // console.warn(`Max retries reached (${maxRetries}). Generating a new random board.`);
         boardMap = this.randomBoardGenerator(size);
       }
     }

@@ -3,12 +3,9 @@ import { useEffect } from "react";
 import { Board } from "./game-components/board";
 import { SizeSlider } from "./game-components/size-slider";
 import { DifficultyText } from "./game-components/difficulty";
-import { useGame } from "../contexts/game-context";
 import { ModeSwitch } from "./game-components/mode-switch";
 
 export default function Game() {
-  const { setIsMouseDown } = useGame();
-
   useEffect(() => {
     // Prevent scroll
     document.body.style.overflow = "hidden";
@@ -19,13 +16,7 @@ export default function Game() {
   }, []);
 
   return (
-    <div
-      className="flex flex-col items-center justify-center w-screen h-screen bg-gray-300"
-      onMouseDown={() => setIsMouseDown(true)}
-      onMouseUp={() => setIsMouseDown(false)}
-      onTouchStart={() => setIsMouseDown(true)}
-      onTouchEnd={() => setIsMouseDown(false)}
-    >
+    <div className="flex flex-col items-center justify-center w-screen h-screen bg-gray-300">
       <div className="w-full max-w-[500px] shadow-2xl rounded-2xl flex flex-col items-center">
         <div className=" w-full bg-gray-200 px-4 rounded-t-2xl flex flex-col items-center gap-2">
           <p className="text-2xl font-bold text-gray-800 tracking-tight pt-10">Puzzle Game</p>
