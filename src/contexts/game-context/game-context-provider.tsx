@@ -206,6 +206,18 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     setBoard(newBoard);
   };
 
+  useEffect(() => {
+    const handleSpace = (e: KeyboardEvent) => {
+      if (e.code === "Space" || e.key === " ") {
+        setClickMode((prev) => (prev === "fill" ? "cross" : "fill"));
+        // Prevent page scroll on space
+        e.preventDefault();
+      }
+    };
+    window.addEventListener("keydown", handleSpace);
+    return () => window.removeEventListener("keydown", handleSpace);
+  }, []);
+
   return (
     <GameContext.Provider
       value={{
