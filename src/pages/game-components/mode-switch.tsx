@@ -1,8 +1,8 @@
-import { useGame } from "../../contexts/game-context";
 import { X, Square } from "lucide-react";
+import { useLevel } from "../../contexts/level-context";
 
 export const ModeSwitch = () => {
-  const { clickMode, setClickMode } = useGame();
+  const { clickMode, setClickMode } = useLevel();
 
   return (
     <div className="flex items-center gap-4 m-2">

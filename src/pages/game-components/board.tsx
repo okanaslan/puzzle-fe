@@ -1,9 +1,11 @@
 import { BoardCell } from "./board-components/board-cell";
 import { LeftHintCell, TopHintCell, VoidCell } from "./board-components/hint-cells";
 import { useGame } from "../../contexts/game-context";
+import { useLevel } from "../../contexts/level-context";
 
 export const Board = () => {
-  const { board, level } = useGame();
+  const { level } = useGame();
+  const { board } = useLevel();
 
   const hintSize = level.maxHintSize;
   const totalRows = level.size + hintSize;
