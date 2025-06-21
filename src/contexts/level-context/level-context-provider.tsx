@@ -3,6 +3,7 @@ import { LevelContext } from "./level-context";
 import { CellAction, CellState } from "../../types";
 import { useGame } from "../game-context";
 import { useSound } from "../../hooks/sound";
+import { isColumnFinished, isLevelFinished, isRowFinished } from "./utils";
 
 export interface LevelContextProps {
   board: CellState[][];
@@ -65,6 +66,20 @@ export const LevelProvider: React.FC<{ children: ReactNode }> = ({ children }) =
         }),
       );
 
+      if (isRowFinished(newBoard, row, level.boardMap)) {
+        level.boardMap[row].forEach((value, colIndex) => {
+          if (value === 0) {
+            newBoard[row][colIndex] = "crossed";
+          }
+        });
+      }
+      if (isColumnFinished(newBoard, col, level.boardMap)) {
+        for (let rowIndex = 0; rowIndex < newBoard.length; rowIndex++) {
+          if (level.boardMap[rowIndex][col] === 0) {
+            newBoard[rowIndex][col] = "crossed";
+          }
+        }
+      }
       if (lives.current <= 0) {
         setBoard(newBoard.map((rowArr, i) => rowArr.map((cell, j) => (level.boardMap[i][j] === 1 ? "failed" : cell))));
         finishLevel();
@@ -106,18 +121,6 @@ export const LevelProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     },
     [clickMode, fillCell],
   );
-
-  function isLevelFinished(board: CellState[][], boardMap: number[][]): boolean {
-    for (let row = 0; row < board.length; row++) {
-      for (let col = 0; col < board[row].length; col++) {
-        // All cells that should be filled must be "correct" or "should-be-correct"
-        if (boardMap[row][col] === 1 && board[row][col] !== "correct" && board[row][col] !== "should-be-correct") {
-          return false;
-        }
-      }
-    }
-    return true;
-  }
 
   // MARK: Event Listeners
 

@@ -8,3 +8,7 @@
 
 - Added new sound effects for player actions.
 - Separated level context from game context.
+
+### v1.2.0
+
+- Fill the completed rows or columns.
