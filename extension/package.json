@@ -1,0 +1,52 @@
+{
+    "name": "puzzlegame",
+    "displayName": "Puzzle Game",
+    "description": "A fun puzzle game",
+    "version": "1.0.0",
+    "publisher": "okanaslan",
+    "license": "MIT",
+    "engines": {
+        "vscode": "^1.100.0"
+    },
+    "categories": [
+        "Other"
+    ],
+    "activationEvents": [],
+    "main": "./dist/extension.js",
+    "contributes": {
+        "viewsContainers": {
+            "activitybar": [
+                {
+                    "id": "custom-activitybar",
+                    "title": "Puzzle Game",
+                    "icon": "lvl1cat1.gif"
+                }
+            ]
+        },
+        "views": {
+            "custom-activitybar": [
+                {
+                    "type": "webview",
+                    "name": "Puzzle Game",
+                    "id": "puzzleGame.openview"
+                }
+            ]
+        },
+        "commands": [
+            {
+                "command": "puzzleGame.openPuzzleGameCommand",
+                "category": "Puzzle Game",
+                "title": "Open Puzzle Game"
+            }
+        ]
+    },
+    "scripts": {
+        "vscode:prepublish": "npm run build",
+        "build": "tsc"
+    },
+    "devDependencies": {
+        "@types/node": "22.x",
+        "@types/vscode": "^1.100.0",
+        "typescript": "^5.8.3"
+    }
+}

@@ -24,3 +24,14 @@ A simple puzzle game built with React, Vite, and Tailwind CSS. The game features
 - [Lucide Icons](https://lucide.dev/) - Open-source icon collection.
 
 Enjoy solving puzzles and challenge yourself!
+
+## Example Usage
+
+```javascript
+<!doctype html>
+<html>
+  <body>
+    <iframe src="https://unpkg.com/puzzle-game" style="width: 100%; height: 100vh; border: none"></iframe>
+  </body>
+</html>
+```

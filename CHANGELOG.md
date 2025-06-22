@@ -16,3 +16,7 @@
 #### v1.2.1
 
 - Fixed bundling issues.
+
+### v1.3.0
+
+- VS Code Extension added.
