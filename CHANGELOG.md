@@ -12,3 +12,7 @@
 ### v1.2.0
 
 - Fill the completed rows or columns.
+
+#### v1.2.1
+
+- Fixed bundling issues.

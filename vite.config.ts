@@ -1,8 +1,16 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
+import { viteSingleFile } from "vite-plugin-singlefile";
 
-// https://vite.dev/config/
 export default defineConfig({
-  plugins: [react(), tailwindcss()],
+  plugins: [react(), viteSingleFile(), tailwindcss()],
+  build: {
+    target: "esnext",
+    cssCodeSplit: false, // Don't split CSS into separate files
+    assetsInlineLimit: 100000000, // Inline all assets (images/fonts/etc.)
+    rollupOptions: {
+      output: {},
+    },
+  },
 });
