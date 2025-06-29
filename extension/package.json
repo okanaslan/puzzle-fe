@@ -34,7 +34,7 @@
         },
         "commands": [
             {
-                "command": "puzzleGame.openPuzzleGameCommand",
+                "command": "puzzleGame.openGame",
                 "category": "Puzzle Game",
                 "title": "Open Puzzle Game"
             }
