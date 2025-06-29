@@ -40,17 +40,16 @@ export default function Game() {
   }, []);
 
   return (
-    <div className="flex flex-col items-center justify-center w-screen h-screen bg-gray-300">
-      <div className="w-full max-w-[500px] flex flex-col items-center">
-        <div className=" w-full bg-gray-200 px-4 rounded-t-2xl flex flex-col items-center gap-2">
-          <p className="text-2xl font-bold text-gray-800 tracking-tight pt-4">Puzzle Game</p>
-          <SizeSlider />
+    <div className="flex items-center justify-center w-screen h-screen">
+      <div className="w-full max-w-sm flex flex-col items-center">
+        <div className=" w-full bg-white flex flex-col items-center">
           {/* <DifficultySlider onSelect={handleRandomLevel} /> */}
           <DifficultyText />
         </div>
         <div className="w-full bg-white py-2 flex flex-col items-center gap-4">
           <Board />
           <ModeSwitch />
+          <SizeSlider />
         </div>
       </div>
     </div>

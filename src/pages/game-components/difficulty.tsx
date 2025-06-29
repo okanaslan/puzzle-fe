@@ -33,7 +33,7 @@ export function DifficultyText() {
   }
 
   return (
-    <div className="relative flex flex-row items-center justify-center w-full p-4 bg-gray-200">
+    <div className="relative flex flex-row items-center justify-center w-full p-4 bg-white">
       <div className="absolute text-gray-600 text-md left-4">
         {lives.current > 0 ? `${"❤️".repeat(lives.current)}${"🤍".repeat(lives.max - lives.current)}` : "Game Over"}
       </div>
