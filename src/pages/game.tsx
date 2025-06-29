@@ -1,9 +1,8 @@
 import { useEffect, useRef } from "react";
 
 import { Board } from "./game-components/board";
-import { SizeSlider } from "./game-components/size-slider";
-import { DifficultyText } from "./game-components/difficulty";
-import { ModeSwitch } from "./game-components/mode-switch";
+import { TopBar } from "./game-components/top-bar";
+import { BottomBar } from "./game-components/bottom-bar";
 
 const ALERT_INTERVAL_MINUTES = 15;
 
@@ -42,14 +41,10 @@ export default function Game() {
   return (
     <div className="flex items-center justify-center w-screen h-screen">
       <div className="w-full max-w-sm flex flex-col items-center">
-        <div className=" w-full bg-white flex flex-col items-center">
-          {/* <DifficultySlider onSelect={handleRandomLevel} /> */}
-          <DifficultyText />
-        </div>
-        <div className="w-full bg-white py-2 flex flex-col items-center gap-4">
+        <div className="w-full bg-white flex flex-col items-center">
+          <TopBar />
           <Board />
-          <ModeSwitch />
-          <SizeSlider />
+          <BottomBar />
         </div>
       </div>
     </div>

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useGame } from "../../contexts/game-context";
+import { useGame } from "../../../contexts/game-context";
 
 export function SizeSlider() {
   const [value, setValue] = useState(5);

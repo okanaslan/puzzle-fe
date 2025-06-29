@@ -1,8 +1,9 @@
 import { Shuffle } from "lucide-react";
+
 import { useGame } from "../../contexts/game-context";
 import { difficultyCalculator } from "../../utils/difficulty-calculator";
 
-export function DifficultyText() {
+export function TopBar() {
   const { level, newLevel, lives } = useGame();
 
   let text = "";
@@ -42,13 +43,15 @@ export function DifficultyText() {
         <span>{`${text}`}</span>
         <span>{emoji}</span>
       </div>
-      <Shuffle
-        className="absolute right-4 w-6 h-6 text-gray-600 cursor-pointer hover:text-gray-800 transition"
-        onClick={() => newLevel()}
-        role="button"
-        tabIndex={0}
-        aria-label="Shuffle Level"
-      />
+      <div className="flex flex-row items-center gap-4 absolute right-4">
+        <Shuffle
+          className="w-6 h-6 text-gray-600 cursor-pointer hover:text-gray-800 transition"
+          onClick={() => newLevel()}
+          role="button"
+          tabIndex={0}
+          aria-label="Shuffle Level"
+        />
+      </div>
     </div>
   );
 }

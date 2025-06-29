@@ -20,3 +20,9 @@
 ### v1.3.0
 
 - VS Code Extension added.
+
+### v1.4.0
+
+- Shadcn integration
+- Settings dialog added
+- More minimalist UI

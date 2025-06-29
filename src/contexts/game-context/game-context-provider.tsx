@@ -17,7 +17,7 @@ export interface GameContextProps {
 }
 
 export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const initialLevel = useMemo(() => LevelGenerator.generate(15), []);
+  const initialLevel = useMemo(() => LevelGenerator.generate(5), []);
 
   const [level, setLevel] = useState<Level>(initialLevel);
   const [isFinished, setIsFinished] = useState<boolean>(false);
