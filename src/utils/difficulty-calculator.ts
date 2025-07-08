@@ -15,7 +15,7 @@ export const difficultyCalculator = (level: Level): number => {
 
   // Helper: score a hint array (more segments and smaller segments = harder)
   const scoreHints = (hints: number[][]) => {
-    return hints.reduce((sum, hintArr) => {
+    const score = hints.reduce((sum, hintArr, index) => {
       const isEmpty = hintArr.length === 0 || (hintArr.length === 1 && hintArr[0] === 0);
       if (isEmpty) return sum;
 
@@ -26,16 +26,24 @@ export const difficultyCalculator = (level: Level): number => {
 
       const closenessToFull = filledCellCount / size;
 
+      const indexFromTheStart = index + 1; // 1-based index
+      const indexFromTheEnd = size - index; // 1-based index from the end
+      const indexFromTheMiddle = Math.min(indexFromTheStart, indexFromTheEnd);
+      const rowDistanceFromTheEnds = indexFromTheMiddle / (size / 2);
+      const distanceFromEndsMultiplier = rowDistanceFromTheEnds * 0.5 + 0.75; // Closer to ends = less difficult
+
       const segments = hintArr.length;
       const avgSegment = hintArr.reduce((a, b) => a + b, 0) / segments;
       const segmentScore = (segments / size) * 30;
       const avgScore = (1 - avgSegment / size) * 70;
 
       // Apply closenessToFull as a multiplier (less filled = higher impact)
-      const rowScore = (segmentScore + avgScore) * (1 - closenessToFull);
+      const rowScore = (segmentScore + avgScore) * (1 - closenessToFull) * distanceFromEndsMultiplier;
 
       return sum + rowScore;
     }, 0);
+
+    return score;
   };
 
   // Score all rows and columns

@@ -1,5 +1,5 @@
 import { ModeSwitch } from "./bottom-bar-components/mode-switch";
-import { SettingsDialog } from "./top-bar-components/settings-dialog";
+import { SettingsDialog } from "./settings-components/settings-dialog";
 
 export const BottomBar = () => {
   return (

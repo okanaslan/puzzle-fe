@@ -26,3 +26,8 @@
 - Shadcn integration
 - Settings dialog added
 - More minimalist UI
+
+### v1.5.0
+
+- Max size is now 15
+- Duration alerts removed

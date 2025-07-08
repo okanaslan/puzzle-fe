@@ -18,7 +18,7 @@ export function SizeSlider() {
         id="size-slider"
         type="range"
         min={5}
-        max={20}
+        max={15}
         step={5}
         value={value}
         onChange={handleChange}
@@ -28,7 +28,6 @@ export function SizeSlider() {
         <span>5x5</span>
         <span>10x10</span>
         <span>15x15</span>
-        <span>20x20</span>
       </div>
     </div>
   );

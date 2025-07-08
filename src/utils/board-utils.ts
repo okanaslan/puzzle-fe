@@ -1,4 +1,4 @@
-import { CellState } from "../../types";
+import { CellState } from "../types";
 
 export function isLevelFinished(board: CellState[][], boardMap: number[][]): boolean {
   for (let row = 0; row < board.length; row++) {

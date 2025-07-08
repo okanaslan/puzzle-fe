@@ -3,7 +3,7 @@ import { LevelContext } from "./level-context";
 import { CellAction, CellState } from "../../types";
 import { useGame } from "../game-context";
 import { useSound } from "../../hooks/sound";
-import { isColumnFinished, isLevelFinished, isRowFinished } from "./utils";
+import { isColumnFinished, isLevelFinished, isRowFinished } from "../../utils/board-utils";
 
 export interface LevelContextProps {
   board: CellState[][];
@@ -123,7 +123,6 @@ export const LevelProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   );
 
   // MARK: Event Listeners
-
   useEffect(() => {
     const handleTouchStart = (e: TouchEvent) => {
       const touch = e.touches[0];
