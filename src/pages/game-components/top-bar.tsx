@@ -42,6 +42,7 @@ export function TopBar() {
         <span>{emoji}</span>
         <span>{`${text}`}</span>
         <span>{emoji}</span>
+        <span className="text-gray-500">({score})</span>
       </div>
       <div className="flex flex-row items-center gap-4 absolute right-4">
         <Shuffle
